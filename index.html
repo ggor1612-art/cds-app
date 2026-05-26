@@ -1,0 +1,1223 @@
+<!-- ECDS v2.9 - 2026-05-26 18:11 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="ECDS"/>
+<title>Edmonton Car Driving School</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;background:#eceae5;color:#1a1a1a;min-height:100vh}
+:root{--b:#1a3a5c;--g:#c8860a;--gn:#0a5c3a;--r:9px;--bg:#fff;--bg2:#f5f3ef;--bg3:#eceae5;--t1:#1a1a1a;--t2:#666;--t3:#aaa;--bd:1px solid rgba(0,0,0,0.13)}
+.topbar{background:var(--b);color:white;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:100}
+.topbar .n{font-size:15px;font-weight:700}.topbar .s{font-size:10px;opacity:.6;margin-top:1px}
+.tr{display:flex;gap:6px;flex-shrink:0}
+.tabs{display:flex;background:var(--bg);border-bottom:var(--bd);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:50px;z-index:99}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:10px 13px;font-size:13px;font-weight:600;color:var(--t2);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab.on{color:var(--b);border-bottom-color:var(--b)}
+.pg{display:none;padding:14px 14px 100px}.pg.on{display:block}
+.ibar{background:#fff8ed;border:1px solid #f0d060;border-radius:var(--r);padding:11px 13px;margin-bottom:12px;font-size:13px;color:#7a5500;line-height:1.5}
+.card{background:var(--bg);border:var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.card.ring{border-color:var(--b);border-width:2px}
+.csec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:400px){.g3{grid-template-columns:1fr 1fr}}
+.f{display:flex;flex-direction:column;gap:3px}
+.f label{font-size:10px;color:var(--t2);font-weight:700}
+.f input,.f select,.f textarea{border:var(--bd);border-radius:8px;padding:0 10px;font-size:16px;background:var(--bg);color:var(--t1);width:100%;height:42px;-webkit-appearance:none;outline:none}
+.f input:focus,.f select:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
+.f textarea{height:76px;padding:8px 10px;resize:none;font-size:14px;line-height:1.5}
+.f input.ai{background:#eef4ff;border-color:rgba(26,58,92,.35)}
+.btn{padding:10px 14px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:var(--bd);background:var(--bg);color:var(--t1);display:inline-flex;align-items:center;gap:6px;-webkit-user-select:none;white-space:nowrap}
+.btn:active{opacity:.7;transform:scale(.97)}
+.btn.b{background:var(--b);color:#fff;border-color:var(--b)}
+.btn.g{background:var(--g);color:#fff;border-color:var(--g)}
+.btn.gn{background:var(--gn);color:#fff;border-color:var(--gn)}
+.btn.sm{padding:7px 12px;font-size:12px}
+.btn.ghost{background:none;border:none;color:var(--t2);padding:6px 8px}
+.btn.danger{color:#a32d2d}
+.brow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.sl{display:flex;flex-direction:column;gap:7px}
+.sr{background:var(--bg);border:var(--bd);border-radius:10px;padding:12px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-user-select:none}
+.sr:active,.sr.sel{border-color:var(--b);border-width:2px}
+.av{width:44px;height:44px;border-radius:10px;background:var(--b);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.si{flex:1;min-width:0}
+.sn{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sm2{font-size:11px;color:var(--t2);margin-top:2px;display:flex;gap:4px;flex-wrap:wrap}
+.bx{display:inline-flex;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap}
+.gdl{background:#deeeff;color:#0c447c}.non{background:#e2f4d4;color:#27500a}
+.bsh{background:#fce8f0;color:#72243e}.bok{background:#e2f4d4;color:#27500a}
+.bnd{background:#fff0d4;color:#633806}.bmn{background:#ffe8e8;color:#a32d2d}
+.pz{border:2px dashed rgba(0,0,0,.2);border-radius:8px;padding:24px 14px;text-align:center;cursor:pointer;background:var(--bg2);position:relative;-webkit-user-select:none}
+.pz:active{background:var(--bg3)}
+.pz-icon{font-size:36px}
+.pz-txt{font-size:13px;color:var(--t2);margin-top:6px;line-height:1.5}
+.pz img{max-height:140px;max-width:100%;border-radius:6px;display:none;margin:0 auto 8px}
+.spin{position:absolute;inset:0;background:rgba(255,255,255,.92);display:none;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;gap:8px;z-index:5}
+.spin-ico{font-size:28px;animation:rot 1s linear infinite;display:block}
+@keyframes rot{to{transform:rotate(360deg)}}
+.air{display:none;margin-top:8px;padding:9px 11px;background:#eef4ff;border-radius:8px;font-size:11px;color:var(--t2);line-height:1.7}
+.trow{display:flex;align-items:center;gap:10px;padding:10px 0}
+.tgl{width:46px;height:27px;background:var(--bg2);border:var(--bd);border-radius:14px;position:relative;cursor:pointer;flex-shrink:0;transition:background .18s}
+.tgl.on{background:var(--b);border-color:var(--b)}
+.tgl::after{content:'';position:absolute;width:21px;height:21px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .18s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tgl.on::after{left:23px}
+.co-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:400px){.co-grid{grid-template-columns:1fr}}
+.co{border:var(--bd);border-radius:8px;padding:11px;cursor:pointer;-webkit-user-select:none}
+.co.on{border-color:var(--b);border-width:2px;background:#eef4ff}
+.co-t{font-size:13px;font-weight:700}.co-d{font-size:10px;color:var(--t2);margin-top:2px}.co-p{font-size:11px;color:var(--b);font-weight:700;margin-top:4px}
+.dr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:var(--bd);font-size:13px;gap:10px}
+.dr:last-child{border:none;padding-bottom:0}
+.dl{color:var(--t2);flex-shrink:0}.dv{font-weight:600;text-align:right;word-break:break-word}
+.ss{display:grid;grid-template-columns:18px 1fr 1fr 1fr 70px 70px;gap:6px;align-items:end;padding:7px 0;border-bottom:var(--bd)}
+.ss:last-child{border:none}
+.ss-n{font-size:12px;font-weight:700;color:var(--t3);text-align:center;padding-bottom:8px}
+.ss .f label{font-size:9px}.ss .f input{height:36px;font-size:14px}
+.att{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border-radius:8px;margin-bottom:6px}
+.att-n{font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-s{font-size:10px;color:var(--t2);flex-shrink:0}
+.shbg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;justify-content:center;padding:0 10px 10px}
+.shbg.on{display:flex}
+.sh{background:var(--bg);border-radius:14px;width:100%;max-width:500px;overflow:hidden}
+.sh-ttl{padding:11px;text-align:center;font-size:12px;color:var(--t2);border-bottom:var(--bd)}
+.sh-btn{display:flex;align-items:center;gap:12px;padding:15px 18px;font-size:16px;font-weight:500;color:var(--b);border:none;background:none;width:100%;cursor:pointer;border-bottom:var(--bd);-webkit-user-select:none}
+.sh-btn:active{background:var(--bg2)}.sh-btn.red{color:#a32d2d}
+.sh-cancel{display:block;width:100%;padding:15px;font-size:17px;font-weight:700;color:var(--b);border:none;background:var(--bg);cursor:pointer;border-radius:14px;margin-top:8px}
+.empty{text-align:center;padding:48px 20px;color:var(--t2)}
+.empty-ico{font-size:44px;display:block;margin-bottom:10px;opacity:.35}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--b);color:#fff;padding:11px 24px;border-radius:22px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:opacity .22s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.toast.on{opacity:1}
+#inp-cam,#inp-lib,#inp-att{display:none}
+/* SIGNATURE & INITIALS */
+.sig-wrap{margin-top:14px}
+.sig-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sig-box{position:relative;border:2px solid var(--navy);border-radius:8px;background:#fff;overflow:hidden;touch-action:none}
+.sig-box::after{content:'';position:absolute;left:16px;right:16px;bottom:28px;border-bottom:1px dashed rgba(0,0,0,0.2);pointer-events:none}
+.sig-canvas{display:block;width:100%;height:130px;cursor:crosshair;touch-action:none}
+.sig-inner-label{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;color:rgba(0,0,0,0.25);pointer-events:none;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+.sig-row{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
+.sig-hint{font-size:11px;color:var(--t2)}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="topbar">
+  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
+  <div class="tr">
+    <button class="btn g sm" id="btn-save">&#11015; Save</button>
+    <label class="btn sm" style="cursor:pointer">&#11014; Load<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
+  </div>
+</div>
+<div class="tabs">
+  <button class="tab on" id="tab-home">&#128100; Students</button>
+  <button class="tab" id="tab-reg">&#10133; Register</button>
+  <button class="tab" id="tab-con">&#128196; Contract</button>
+  <button class="tab" id="tab-dpl">&#128203; DPLS0068</button>
+  <button class="tab" id="tab-cmp">&#127941; Completion</button>
+</div>
+
+<div class="pg on" id="pg-home">
+  <div class="ibar">&#8505;&#65039; Tap <strong>Save</strong> regularly to download a backup. Tap <strong>Load</strong> to restore it next time.</div>
+  <div id="home-list" class="sl"></div>
+</div>
+
+<div class="pg" id="pg-reg">
+  <div class="card ring">
+    <div class="csec">&#128247; STEP 1 &mdash; PHOTOGRAPH LICENCE</div>
+    <div class="pz" id="pz">
+      <div class="pz-icon">&#127243;</div>
+      <div class="pz-txt">Tap to photograph licence<br><strong>AI reads it automatically</strong></div>
+      <img id="ph-img" alt=""/>
+      <div class="spin" id="spin"><span class="spin-ico">&#9696;</span><span style="font-size:12px;color:var(--t2)">Reading&hellip;</span></div>
+    </div>
+    <div class="air" id="air"><strong style="color:var(--b);display:block;margin-bottom:3px">&#10024; AI extracted &mdash; verify below</strong><span id="air-txt"></span></div>
+  </div>
+  <div class="card">
+    <div class="csec">STUDENT INFORMATION</div>
+    <div class="g2" style="margin-bottom:8px">
+      <div class="f"><label>Full Name *</label><input id="r-name" placeholder="Last, First Middle"/></div>
+      <div class="f"><label>Cell *</label><input id="r-cell" type="tel" placeholder="780-000-0000"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:8px">
+      <div class="f"><label>Address</label><input id="r-addr" placeholder="123 Main St"/></div>
+      <div class="f"><label>City</label><input id="r-city" placeholder="Edmonton"/></div>
+    </div>
+    <div class="g3" style="margin-bottom:8px">
+      <div class="f"><label>Postal Code</label><input id="r-post" placeholder="T5A 0A1"/></div>
+      <div class="f"><label>Gender</label><select id="r-gen"><option value="">--</option><option>Male</option><option>Female</option></select></div>
+      <div class="f"><label>Date of Birth</label><input id="r-dob" type="date"/></div>
+    </div>
+    <div class="trow"><span style="font-size:14px;flex:1">&#9888;&#65039; Minor &mdash; guardian sig required</span><div class="tgl" id="tgl-m"></div></div>
+  </div>
+  <div class="card">
+    <div class="csec">LICENCE DETAILS</div>
+    <div class="g3" style="margin-bottom:8px">
+      <div class="f"><label>Licence #</label><input id="r-lic" placeholder="123456-789"/></div>
+      <div class="f"><label>Type &amp; Cond.</label><input id="r-type" placeholder="GDL, None"/></div>
+      <div class="f"><label>Instructor</label><input id="r-inst" placeholder="Name"/></div>
+    </div>
+    <div class="g3">
+      <div class="f"><label>Date of Issue</label><input id="r-iss" type="date"/></div>
+      <div class="f"><label>Date of Expiry</label><input id="r-exp" type="date"/></div>
+      <div class="f"><label>Registration Date</label><input id="r-reg" type="date"/></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="csec">COURSE TYPE</div>
+    <div class="co-grid">
+      <div class="co on" data-cls="GDL"><div class="co-t">Class 5 GDL</div><div class="co-d">10 hrs in-vehicle &middot; 15 in-class</div><div class="co-p">$699</div></div>
+      <div class="co" data-cls="Non-GDL"><div class="co-t">Class 5 Non-GDL</div><div class="co-d">6 hrs in-vehicle &middot; 15 in-class</div><div class="co-p">$450</div></div>
+      <div class="co" data-cls="Brush-up"><div class="co-t">Hourly Lessons</div><div class="co-d">Brush-up sessions</div><div class="co-p">$220/2hrs</div></div>
+      <div class="co" data-cls="Other"><div class="co-t">Other</div><div class="co-d">Custom arrangement</div><div class="co-p">--</div></div>
+    </div>
+  </div>
+  <div class="brow" id="reg-btns"></div>
+</div>
+
+<div class="pg" id="pg-con">
+  <div class="ibar">&#9432;&#65039; Contract must be signed before any in-vehicle sessions begin.</div>
+  <div class="card"><div class="csec">SELECT STUDENT</div><div id="con-list" class="sl"></div></div>
+  <div id="con-prev" style="display:none">
+    <div class="card">
+      <div class="csec">READY TO DOWNLOAD</div>
+      <div id="con-body" style="margin-bottom:12px"></div>
+    </div>
+    <div class="card">
+      <div class="csec">&#9998; SIGNATURES</div>
+      <div class="sig-wrap">
+        <div class="sig-lbl">&#9998; Student / Guardian Signature</div>
+        <div class="sig-box">
+          <canvas id="sig-student" class="sig-canvas" width="600" height="130"></canvas>
+          <div class="sig-inner-label">Sign here</div>
+        </div>
+        <div class="sig-row"><span class="sig-hint">Draw signature with finger above</span><button class="btn b-ghost b-sm" id="clr-sig-student">&#8635; Clear</button></div>
+      </div>
+      <div class="sig-wrap">
+        <div class="sig-lbl">&#9998; School Representative Signature</div>
+        <div class="sig-box">
+          <canvas id="sig-school" class="sig-canvas" width="600" height="130"></canvas>
+          <div class="sig-inner-label">Sign here</div>
+        </div>
+        <div class="sig-row"><span class="sig-hint">Draw signature with finger above</span><button class="btn b-ghost b-sm" id="clr-sig-school">&#8635; Clear</button></div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="f"><label>Date Signed</label><input type="date" id="sig-date"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <button class="btn b-gold" id="btn-con-dl">&#11015; Download Contract PDF</button>
+    </div>
+  </div>
+</div>
+
+<div class="pg" id="pg-dpl">
+  <div class="card"><div class="csec">SELECT STUDENT</div><div id="dpl-list" class="sl"></div></div>
+  <div id="dpl-panel" style="display:none">
+    <div class="card">
+      <div class="csec">INSTRUCTORS &amp; CERTIFICATE</div>
+      <div class="g2" style="margin-bottom:8px">
+        <div class="f"><label>In-Vehicle Instructor</label><input id="d-iv" placeholder="Name"/></div>
+        <div class="f"><label>Classroom Instructor</label><input id="d-cl" placeholder="Name"/></div>
+      </div>
+      <div class="g3">
+        <div class="f"><label>Certificate #</label><input id="d-cert" placeholder="Cert #"/></div>
+        <div class="f"><label>Cert Issue Date</label><input id="d-cdt" type="date"/></div>
+        <div class="f"><label>Condition Code</label><input id="d-cnd" placeholder="(if any)"/></div>
+      </div>
+    </div>
+    <div class="card"><div class="csec">IN-VEHICLE SESSIONS <span id="iv-lbl" style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--t3)"></span></div><div id="iv-wrap"></div></div>
+    <div class="card"><div class="csec">CLASSROOM SESSIONS <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--t3)">(6 sessions)</span></div><div id="cl-wrap"></div></div>
+    <div class="card">
+      <div class="csec">FINAL GRADES</div>
+      <div class="g3" style="margin-bottom:8px">
+        <div class="f"><label>In-Vehicle Grade</label><input id="d-ivg" placeholder="e.g. B (7.5)"/></div>
+        <div class="f"><label>Classroom Grade</label><input id="d-clg" placeholder="e.g. A (8.5)"/></div>
+        <div class="f"><label>Overall Grade</label><input id="d-ovr" placeholder="e.g. B"/></div>
+      </div>
+      <div class="g2">
+        <div class="f"><label>In-Vehicle Hours</label><input id="d-ivh" type="number" min="0" max="20"/></div>
+        <div class="f"><label>Classroom Hours</label><input id="d-clh" type="number" min="0" max="30"/></div>
+      </div>
+    </div>
+    <div class="card"><button class="btn b" id="btn-dpl-dl">&#11015; Download DPLS0068 PDF</button></div>
+  </div>
+</div>
+
+<div class="pg" id="pg-cmp">
+  <div class="card"><div class="csec">SELECT STUDENT</div><div id="cmp-list" class="sl"></div></div>
+  <div id="cmp-panel" style="display:none">
+    <div class="card">
+      <div class="csec">FINAL GRADES</div>
+      <div class="g3" style="margin-bottom:8px">
+        <div class="f"><label>In-Vehicle Grade</label><input id="c-ivg" placeholder="e.g. B (7.5)"/></div>
+        <div class="f"><label>Classroom Grade</label><input id="c-clg" placeholder="e.g. A (8.5)"/></div>
+        <div class="f"><label>Overall Grade</label><input id="c-ovr" placeholder="e.g. B"/></div>
+      </div>
+      <div class="g2" style="margin-bottom:8px">
+        <div class="f"><label>In-Vehicle Hours</label><input id="c-ivh" type="number" min="0" max="20"/></div>
+        <div class="f"><label>Classroom Hours</label><input id="c-clh" type="number" min="0" max="30"/></div>
+      </div>
+      <div class="f"><label>Instructor Notes</label><textarea id="c-note" placeholder="Remarks..."></textarea></div>
+    </div>
+    <div class="card">
+      <div class="csec">ATTACH DOCUMENTS</div>
+      <div id="att-list"></div>
+      <div class="pz" style="padding:18px" id="pz-att"><div class="pz-icon" style="font-size:26px">&#128206;</div><div class="pz-txt">Tap to attach certificates, photos, or PDFs</div></div>
+    </div>
+    <div class="card"><button class="btn gn" id="btn-cmp-dl">&#11015; Download Completion PDF</button></div>
+  </div>
+</div>
+
+<input id="inp-cam" type="file" accept="image/*" capture="environment"/>
+<input id="inp-lib" type="file" accept="image/*"/>
+<input id="inp-att" type="file" accept="image/*,.pdf" multiple/>
+
+<div class="shbg" id="sh-photo">
+  <div style="width:100%;max-width:500px">
+    <div class="sh">
+      <div class="sh-ttl">Licence Photo</div>
+      <button class="sh-btn" id="sh-cam">&#128247; Take Photo with Camera</button>
+      <button class="sh-btn" id="sh-lib">&#128444; Choose from Photo Library</button>
+      <button class="sh-btn red" id="sh-rem" style="display:none">&#128465; Remove Photo</button>
+    </div>
+    <button class="sh-cancel" id="sh-photo-cancel">Cancel</button>
+  </div>
+</div>
+
+<div class="shbg" id="sh-att">
+  <div style="width:100%;max-width:500px">
+    <div class="sh">
+      <div class="sh-ttl">Attach Document</div>
+      <button class="sh-btn" id="sha-cam">&#128247; Take Photo</button>
+      <button class="sh-btn" id="sha-lib">&#128444; Choose from Library</button>
+      <button class="sh-btn" id="sha-file">&#128196; Choose File (PDF)</button>
+    </div>
+    <button class="sh-cancel" id="sha-cancel">Cancel</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+// Verify jsPDF loaded from CDN
+if (!window.jspdf || !window.jspdf.jsPDF) {
+  // CDN failed - show error and try to recover
+  document.addEventListener('DOMContentLoaded', function() {
+    var warn = document.createElement('div');
+    warn.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#c8860a;color:white;padding:10px 14px;font-size:13px;font-weight:700;z-index:9999;text-align:center';
+    warn.innerHTML = 'Loading PDF library... <button onclick="location.reload()" style="background:white;color:#c8860a;border:none;padding:4px 10px;border-radius:4px;font-weight:700;margin-left:8px;cursor:pointer">Retry</button>';
+    document.body.appendChild(warn);
+  });
+} else {
+  window.jsPDF = window.jspdf.jsPDF;
+  console.log('jsPDF loaded from CDN OK');
+}
+</script>
+
+<script>
+
+'use strict';
+var students = [];
+var photo = null, selCls = 'GDL', isMinor = false;
+var curEdit = null, selCon = null, selDpl = null, selCmp = null, atts = [];
+
+// ── UTILS ──
+function td() { return new Date().toLocaleDateString('en-CA'); }
+function gv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function sv(id, v) { var el = document.getElementById(id); if (el) el.value = v || ''; }
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast on';
+  clearTimeout(t._t); t._t = setTimeout(function() { t.className = 'toast'; }, 2600);
+}
+function updateCount() {
+  var n = students.length;
+  document.getElementById('stu-count').textContent = n + ' student' + (n === 1 ? '' : 's');
+}
+function ini(s) {
+  var p = (s.name || ' ').split(' ');
+  return ((p[1]||'')[0]||'').toUpperCase() + ((p[0]||'')[0]||'').toUpperCase();
+}
+function clsBadge(c) {
+  var map = { GDL: 'gdl:GDL', 'Non-GDL': 'non:Non-GDL', 'Brush-up': 'bsh:Brush-up' };
+  if (map[c]) { var p = map[c].split(':'); return '<span class="bx ' + p[0] + '">' + p[1] + '</span>'; }
+  return '<span class="bx" style="background:var(--bg2);color:var(--t2)">' + (c||'?') + '</span>';
+}
+function docBadges(s) {
+  var c = s.hasCon ? '<span class="bx bok">Contract OK</span>' : '<span class="bx bnd">Contract needed</span>';
+  var d = s.hasDpl ? '<span class="bx bok">DPLS OK</span>' : '<span class="bx bnd">DPLS needed</span>';
+  return c + ' ' + d;
+}
+function avHtml(s, sz) {
+  sz = sz || 44;
+  var r = Math.round(sz * 0.23);
+  var st = 'width:' + sz + 'px;height:' + sz + 'px;border-radius:' + r + 'px';
+  if (s.photo) return '<div class="av" style="' + st + '"><img src="' + s.photo + '" alt=""/></div>';
+  return '<div class="av" style="' + st + '">' + (ini(s)||'?') + '</div>';
+}
+
+// ── SAVE / LOAD ──
+function doSave() {
+  try {
+    var blob = new Blob([JSON.stringify(students, null, 2)], {type: 'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'ECDS_' + td() + '.json';
+    document.body.appendChild(a); a.click();
+    setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+    toast('Saved as ECDS_' + td() + '.json');
+  } catch(e) { toast('Save failed: ' + e.message); }
+}
+function doLoad(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(ev) {
+    try {
+      var data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) { toast('Invalid backup file'); return; }
+      students = data; updateCount(); renderHome();
+      toast(students.length + ' students loaded');
+    } catch(ex) { toast('Load failed'); }
+  };
+  r.readAsText(f);
+}
+
+// ── TABS ──
+function goTab(pg) {
+  ['home','reg','con','dpl','cmp'].forEach(function(p) {
+    document.getElementById('pg-' + p).className = 'pg' + (p === pg ? ' on' : '');
+    document.getElementById('tab-' + p).className = 'tab' + (p === pg ? ' on' : '');
+  });
+  if (pg === 'home') renderHome();
+  if (pg === 'con') { renderSel('con-list', selCon, selectCon); }
+  if (pg === 'dpl') { renderSel('dpl-list', selDpl, selectDpl); }
+  if (pg === 'cmp') { renderSel('cmp-list', selCmp, selectCmp); }
+}
+
+// ── SHEETS ──
+function openSh(n) {
+  if (n === 'photo') document.getElementById('sh-rem').style.display = photo ? 'flex' : 'none';
+  document.getElementById('sh-' + n).className = 'shbg on';
+}
+function closeSh(n) { document.getElementById('sh-' + n).className = 'shbg'; }
+
+// ── PHOTO / OCR ──
+function gotPhoto(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var r = new FileReader();
+  r.onload = function(ev) {
+    photo = ev.target.result;
+    var img = document.getElementById('ph-img');
+    img.src = photo; img.style.display = 'block';
+    document.getElementById('pz').querySelector('.pz-icon').style.display = 'none';
+    document.getElementById('pz').querySelector('.pz-txt').style.display = 'none';
+    var spin = document.getElementById('spin'); spin.style.display = 'flex';
+    readLic(photo).then(function() {
+      spin.style.display = 'none';
+    }).catch(function() {
+      spin.style.display = 'none';
+      toast('Could not read licence - fill manually');
+    });
+  };
+  r.readAsDataURL(file);
+}
+function readLic(dataUrl) {
+  var b64 = dataUrl.split(',')[1];
+  var mimeMatch = dataUrl.match(/data:([^;]+):/);
+  var mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+  var prompt = 'Read this Alberta driver licence. Reply ONLY with raw JSON (no markdown). Keys: full_name (Last, First Middle), licence_number, date_of_birth (YYYY-MM-DD), date_of_issue (YYYY-MM-DD), date_of_expiry (YYYY-MM-DD), address, city, postal_code, gender (Male or Female), condition_codes. Use empty string for unreadable fields.';
+  return fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514', max_tokens: 400,
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
+        { type: 'text', text: prompt }
+      ]}]
+    })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    var txt = '';
+    if (data.content) {
+      data.content.forEach(function(b) { if (b.type === 'text') txt += b.text; });
+    }
+    var p = {};
+    var clean = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+    try { p = JSON.parse(clean); } catch(e) {
+      var start = txt.indexOf('{'), end = txt.lastIndexOf('}');
+      if (start >= 0 && end > start) try { p = JSON.parse(txt.slice(start, end+1)); } catch(e2) {}
+    }
+    var map = { full_name:'r-name', licence_number:'r-lic', date_of_birth:'r-dob',
+      date_of_issue:'r-iss', date_of_expiry:'r-exp', address:'r-addr',
+      city:'r-city', postal_code:'r-post', condition_codes:'r-type' };
+    Object.keys(map).forEach(function(k) {
+      if (p[k]) { sv(map[k], p[k]); document.getElementById(map[k]).classList.add('ai'); }
+    });
+    if (p.gender) document.getElementById('r-gen').value = p.gender;
+    if (!gv('r-reg')) sv('r-reg', td());
+    var parts = [];
+    Object.keys(p).forEach(function(k) { if (p[k]) parts.push('<b>' + k.replace(/_/g,' ') + ':</b> ' + p[k]); });
+    document.getElementById('air-txt').innerHTML = parts.join(' / ') || 'No fields detected.';
+    document.getElementById('air').style.display = 'block';
+    toast(p.full_name || p.licence_number ? 'Licence read - verify fields' : 'Could not read - fill manually');
+  });
+}
+function remPhoto() {
+  photo = null;
+  var img = document.getElementById('ph-img'); img.style.display = 'none'; img.src = '';
+  document.getElementById('pz').querySelector('.pz-icon').style.display = '';
+  document.getElementById('pz').querySelector('.pz-txt').style.display = '';
+  document.getElementById('air').style.display = 'none';
+}
+
+// ── FORM ──
+function toggleMinor() { isMinor = !isMinor; document.getElementById('tgl-m').classList.toggle('on', isMinor); }
+function clearReg() {
+  ['r-name','r-cell','r-addr','r-city','r-post','r-lic','r-type','r-inst','r-dob','r-iss','r-exp','r-reg'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) { el.value = ''; el.classList.remove('ai'); }
+  });
+  document.getElementById('r-gen').selectedIndex = 0;
+  photo = null; isMinor = false; curEdit = null; selCls = 'GDL';
+  document.getElementById('tgl-m').classList.remove('on');
+  var img = document.getElementById('ph-img'); img.style.display = 'none'; img.src = '';
+  var pz = document.getElementById('pz');
+  pz.querySelector('.pz-icon').style.display = '';
+  pz.querySelector('.pz-txt').style.display = '';
+  document.getElementById('air').style.display = 'none';
+  document.getElementById('spin').style.display = 'none';
+  document.querySelectorAll('.co').forEach(function(x, i) { x.classList.toggle('on', i === 0); });
+  selCls = 'GDL';
+}
+function buildStu(id) {
+  return {
+    id: id || Date.now(),
+    name: gv('r-name'), cell: gv('r-cell'), addr: gv('r-addr'), city: gv('r-city'),
+    postal: gv('r-post'), gender: gv('r-gen'), dob: gv('r-dob'), minor: isMinor,
+    lic: gv('r-lic'), type: gv('r-type'), inst: gv('r-inst'),
+    issue: gv('r-iss'), exp: gv('r-exp'), reg: gv('r-reg'),
+    licClass: selCls, photo: photo, hasCon: false, hasDpl: false
+  };
+}
+function saveStu() {
+  if (!gv('r-name')) { toast('Full name is required'); return; }
+  var obj = buildStu(curEdit || Date.now());
+  if (curEdit) {
+    var ex = null;
+    for (var i = 0; i < students.length; i++) { if (students[i].id === curEdit) { ex = students[i]; break; } }
+    if (ex) { obj.hasCon = ex.hasCon; obj.hasDpl = ex.hasDpl; }
+    for (var j = 0; j < students.length; j++) { if (students[j].id === curEdit) { students[j] = obj; break; } }
+  } else { students.push(obj); }
+  updateCount(); toast('Student saved - tap Save to backup'); clearReg(); goTab('home');
+}
+function saveThenCon() {
+  if (!gv('r-name')) { toast('Full name is required'); return; }
+  var obj = buildStu(curEdit || Date.now());
+  if (curEdit) {
+    var ex = null;
+    for (var i = 0; i < students.length; i++) { if (students[i].id === curEdit) { ex = students[i]; break; } }
+    if (ex) { obj.hasCon = ex.hasCon; obj.hasDpl = ex.hasDpl; }
+    for (var j = 0; j < students.length; j++) { if (students[j].id === curEdit) { students[j] = obj; break; } }
+  } else { students.push(obj); }
+  updateCount(); selCon = obj.id; curEdit = null; clearReg();
+  goTab('con');
+  renderSel('con-list', selCon, selectCon);
+  selectCon(obj.id);
+}
+
+// ── HOME ──
+function renderHome() {
+  updateCount();
+  var el = document.getElementById('home-list');
+  if (!students.length) {
+    el.innerHTML = '<div class="empty"><span class="empty-ico">&#128101;</span><p>No students yet.<br>Tap <strong>+ Register</strong> to add your first student.</p></div>';
+    return;
+  }
+  el.innerHTML = '';
+  students.forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'sr';
+    div.innerHTML = avHtml(s) +
+      '<div class="si"><div class="sn">' + s.name + '</div><div class="sm2">' + docBadges(s) + '</div></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">' + clsBadge(s.licClass) +
+      (s.minor ? '<span class="bx bmn">Minor</span>' : '') + '</div>';
+    div.onclick = (function(id) { return function() { showDet(id); }; })(s.id);
+    el.appendChild(div);
+  });
+}
+
+function showDet(id) {
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (!s) return;
+
+  var el = document.getElementById('home-list');
+  el.innerHTML = '';
+
+  // Back button
+  var backBtn = document.createElement('button');
+  backBtn.className = 'btn ghost';
+  backBtn.style.marginBottom = '8px';
+  backBtn.innerHTML = '&#8592; Back to list';
+  backBtn.onclick = renderHome;
+  el.appendChild(backBtn);
+
+  // Detail card
+  var card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML =
+    '<div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px">' +
+    avHtml(s, 64) +
+    '<div style="flex:1"><div style="font-size:17px;font-weight:700;margin-bottom:5px">' + s.name + '</div>' +
+    '<div style="display:flex;gap:5px;flex-wrap:wrap">' + clsBadge(s.licClass) + (s.minor ? '<span class="bx bmn">Minor</span>' : '') + '</div>' +
+    '<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">' + docBadges(s) + '</div></div></div>' +
+    '<div class="dr"><span class="dl">Cell</span><span class="dv">' + (s.cell||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Address</span><span class="dv">' + ([s.addr,s.city,s.postal].filter(Boolean).join(', ')||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">DOB</span><span class="dv">' + (s.dob||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Licence</span><span class="dv">' + (s.lic||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Type/Cond</span><span class="dv">' + (s.type||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Issued/Expires</span><span class="dv">' + (s.issue||'--') + ' / ' + (s.exp||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Registered</span><span class="dv">' + (s.reg||'--') + '</span></div>' +
+    '<div class="dr"><span class="dl">Instructor</span><span class="dv">' + (s.inst||'--') + '</span></div>';
+
+  // Action buttons - built with DOM to avoid quote issues
+  var brow = document.createElement('div');
+  brow.className = 'brow';
+
+  var actions = [
+    { cls: 'btn sm b',      label: 'Edit',      fn: function() { editStu(id); } },
+    { cls: 'btn sm g',      label: 'Contract',  fn: function() { selCon = id; goTab('con'); renderSel('con-list', selCon, selectCon); selectCon(id); } },
+    { cls: 'btn sm b',      label: 'DPLS0068',  fn: function() { selDpl = id; goTab('dpl'); renderSel('dpl-list', selDpl, selectDpl); selectDpl(id); } },
+    { cls: 'btn sm gn',     label: 'Complete',  fn: function() { selCmp = id; goTab('cmp'); renderSel('cmp-list', selCmp, selectCmp); selectCmp(id); } },
+    { cls: 'btn sm danger', label: 'Delete',    fn: function() { delStu(id); } }
+  ];
+  actions.forEach(function(a) {
+    var btn = document.createElement('button');
+    btn.className = a.cls; btn.textContent = a.label;
+    btn.onclick = a.fn;
+    brow.appendChild(btn);
+  });
+  card.appendChild(brow);
+  el.appendChild(card);
+}
+
+function editStu(id) {
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (!s) return;
+  curEdit = s.id; photo = s.photo || null; selCls = s.licClass || 'GDL'; isMinor = s.minor || false;
+  sv('r-name', s.name); sv('r-cell', s.cell); sv('r-addr', s.addr); sv('r-city', s.city);
+  sv('r-post', s.postal); sv('r-lic', s.lic); sv('r-type', s.type); sv('r-inst', s.inst);
+  sv('r-dob', s.dob); sv('r-iss', s.issue); sv('r-exp', s.exp); sv('r-reg', s.reg);
+  document.getElementById('r-gen').value = s.gender || '';
+  document.getElementById('tgl-m').classList.toggle('on', isMinor);
+  if (s.photo) { var img = document.getElementById('ph-img'); img.src = s.photo; img.style.display = 'block'; }
+  document.querySelectorAll('.co').forEach(function(x) { x.classList.toggle('on', x.getAttribute('data-cls') === s.licClass); });
+  goTab('reg');
+}
+
+function delStu(id) {
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (!confirm('Delete ' + (s ? s.name : '') + '? This cannot be undone.')) return;
+  students = students.filter(function(x) { return x.id !== id; });
+  updateCount(); toast('Student deleted'); renderHome();
+}
+
+// ── STUDENT SELECTORS ──
+function renderSel(cid, sid, fn) {
+  var el = document.getElementById(cid);
+  el.innerHTML = '';
+  if (!students.length) {
+    el.innerHTML = '<div class="empty"><span class="empty-ico">&#128101;</span><p>No students yet.</p></div>';
+    return;
+  }
+  students.forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'sr' + (sid === s.id ? ' sel' : '');
+    div.innerHTML = avHtml(s) +
+      '<div class="si"><div class="sn">' + s.name + '</div>' +
+      '<div style="font-size:11px;color:var(--t2)">' + s.licClass + ' / Reg: ' + (s.reg||'--') + '</div></div>' +
+      clsBadge(s.licClass);
+    div.onclick = (function(sid2) { return function() { fn(sid2); }; })(s.id);
+    el.appendChild(div);
+  });
+}
+
+function selectCon(id) {
+  selCon = id;
+  renderSel('con-list', selCon, selectCon);
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (!s) return;
+
+  // Update student info FIRST (before showing panel)
+  document.getElementById('con-body').innerHTML =
+    '<div style="display:flex;gap:10px;align-items:center">' + avHtml(s, 48) +
+    '<div><div style="font-size:15px;font-weight:700">' + s.name + '</div>' +
+    '<div style="font-size:12px;color:var(--t2)">' + s.licClass + ' / ' + (s.inst||'No instructor') + ' / Reg: ' + (s.reg||'--') + '</div>' +
+    '<div style="font-size:12px;color:var(--t2)">Minor: ' + (s.minor ? 'Yes - guardian sig required' : 'No') + '</div></div></div>';
+
+  // Show the panel
+  document.getElementById('con-prev').style.display = 'block';
+
+  // Init signature canvases AFTER panel is visible (canvases need to be in DOM)
+  setTimeout(function() {
+    var sc = document.getElementById('sig-student');
+    var rc = document.getElementById('sig-school');
+    // Reset and reinit drawing with baseline
+    if (sc) { sc._di = false; clearCanvas('sig-student'); initDraw(sc, 2.5); }
+    if (rc) { rc._di = false; clearCanvas('sig-school'); initDraw(rc, 2.5); }
+    var sd = document.getElementById('sig-date');
+    if (sd && !sd.value) sd.value = new Date().toLocaleDateString('en-CA');
+  }, 100);
+}
+
+function selectDpl(id) {
+  selDpl = id;
+  renderSel('dpl-list', selDpl, selectDpl);
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (!s) return;
+  document.getElementById('dpl-panel').style.display = 'block';
+  sv('d-iv', s.inst);
+  var n = s.licClass === 'Non-GDL' ? 6 : 10;
+  document.getElementById('iv-lbl').textContent = '(' + n + ' sessions / ' + (n*2) + ' hrs)';
+  document.getElementById('d-ivh').value = n;
+  document.getElementById('d-clh').value = 15;
+  makeSessRows('iv-wrap', n, 'iv');
+  makeSessRows('cl-wrap', 6, 'cl');
+}
+
+function selectCmp(id) {
+  selCmp = id; atts = [];
+  renderSel('cmp-list', selCmp, selectCmp);
+  renderAttList();
+  document.getElementById('cmp-panel').style.display = 'block';
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
+  if (s) { document.getElementById('c-ivh').value = s.licClass === 'Non-GDL' ? 6 : 10; document.getElementById('c-clh').value = 15; }
+}
+
+// ── SESSIONS ──
+function makeSessRows(wrap, n, pfx) {
+  var wEl = document.getElementById(wrap);
+  wEl.innerHTML = '';
+  for (var i = 1; i <= n; i++) {
+    var row = document.createElement('div');
+    row.className = 'ss';
+
+    var num = document.createElement('div');
+    num.className = 'ss-n'; num.textContent = i;
+    row.appendChild(num);
+
+    // Date
+    var df = document.createElement('div'); df.className = 'f';
+    var dl = document.createElement('label'); dl.textContent = 'Date';
+    var di = document.createElement('input'); di.type = 'date';
+    di.id = pfx+'-d-'+i; di.setAttribute('data-pfx', pfx); di.className = 'sess-date';
+    di.addEventListener('change', function() { autoHrs(this.getAttribute('data-pfx')); });
+    df.appendChild(dl); df.appendChild(di); row.appendChild(df);
+
+    // From
+    var ff = document.createElement('div'); ff.className = 'f';
+    var fl = document.createElement('label'); fl.textContent = 'From';
+    var fi = document.createElement('input'); fi.type = 'time'; fi.id = pfx+'-f-'+i;
+    ff.appendChild(fl); ff.appendChild(fi); row.appendChild(ff);
+
+    // To
+    var tf = document.createElement('div'); tf.className = 'f';
+    var tl = document.createElement('label'); tl.textContent = 'To';
+    var ti = document.createElement('input'); ti.type = 'time'; ti.id = pfx+'-t-'+i;
+    tf.appendChild(tl); tf.appendChild(ti); row.appendChild(tf);
+
+    // Instructor initials
+    (function(iiId, siId) {
+      var iiF = document.createElement('div'); iiF.className = 'ini-field';
+      var iiL = document.createElement('label'); iiL.textContent = 'Instr';
+      var iiW = document.createElement('div'); iiW.className = 'ini-cw';
+      var iiC = document.createElement('canvas'); iiC.className = 'ini-canvas';
+      iiC.id = iiId; iiC.width = 70; iiC.height = 38;
+      var iiBtn = document.createElement('button'); iiBtn.className = 'ini-clear'; iiBtn.textContent = 'clear';
+      iiBtn.addEventListener('click', function() { clearCanvas(iiId); });
+      iiW.appendChild(iiC); iiF.appendChild(iiL); iiF.appendChild(iiW); iiF.appendChild(iiBtn);
+      row.appendChild(iiF);
+
+      // Student initials
+      var siF = document.createElement('div'); siF.className = 'ini-field';
+      var siL = document.createElement('label'); siL.textContent = 'Student';
+      var siW = document.createElement('div'); siW.className = 'ini-cw';
+      var siC = document.createElement('canvas'); siC.className = 'ini-canvas';
+      siC.id = siId; siC.width = 70; siC.height = 38;
+      var siBtn = document.createElement('button'); siBtn.className = 'ini-clear'; siBtn.textContent = 'clear';
+      siBtn.addEventListener('click', function() { clearCanvas(siId); });
+      siW.appendChild(siC); siF.appendChild(siL); siF.appendChild(siW); siF.appendChild(siBtn);
+      row.appendChild(siF);
+    })(pfx+'-ii-'+i, pfx+'-si-'+i);
+
+    wEl.appendChild(row);
+  }
+  // Init drawing on all canvases in this wrap
+  wEl.querySelectorAll('.ini-canvas').forEach(function(c) { initDraw(c, 1.5); });
+}
+function autoHrs(pfx) {
+  var s = null;
+  for (var i = 0; i < students.length; i++) { if (students[i].id === selDpl) { s = students[i]; break; } }
+  var n = pfx === 'iv' ? (s && s.licClass === 'Non-GDL' ? 6 : 10) : 6;
+  var c = 0;
+  for (var i = 1; i <= n; i++) { var el = document.getElementById(pfx + '-d-' + i); if (el && el.value) c++; }
+  document.getElementById(pfx === 'iv' ? 'd-ivh' : 'd-clh').value = c * 2;
+}
+function getSessData(pfx, n) {
+  var rows = [];
+  for (var i = 1; i <= n; i++) {
+    var de = document.getElementById(pfx+'-d-'+i);
+    var fe = document.getElementById(pfx+'-f-'+i);
+    var te = document.getElementById(pfx+'-t-'+i);
+    var ic = document.getElementById(pfx+'-ii-'+i);
+    var sc = document.getElementById(pfx+'-si-'+i);
+    rows.push({
+      date: de ? de.value : '',
+      from: fe ? fe.value : '',
+      to:   te ? te.value : '',
+      instrIni: ic && hasContent(ic) ? ic.toDataURL('image/png') : '',
+      stuIni:   sc && hasContent(sc) ? sc.toDataURL('image/png') : ''
+    });
+  }
+  return rows;
+}
+function fmtD(d) { if (!d) return ''; var p = d.split('-'); return p[1] + '/' + p[2] + '/' + p[0]; }
+function fmtT(t) {
+  if (!t) return '';
+  var p = t.split(':'), h = parseInt(p[0],10), m = p[1], ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12; return h + ':' + m + ' ' + ap;
+}
+
+// ── ATTACHMENTS ──
+function gotAtt(e) {
+  Array.from(e.target.files).forEach(function(f) {
+    var r = new FileReader();
+    r.onload = function(ev) { atts.push({name: f.name, size: f.size, data: ev.target.result, type: f.type}); renderAttList(); };
+    r.readAsDataURL(f);
+  });
+}
+function renderAttList() {
+  var el = document.getElementById('att-list');
+  el.innerHTML = '';
+  atts.forEach(function(a, i) {
+    var div = document.createElement('div');
+    div.className = 'att';
+    var ico = a.type.indexOf('pdf') >= 0 ? '&#128196;' : '&#128444;';
+    div.innerHTML = ico + ' <span class="att-n">' + a.name + '</span><span class="att-s">' + Math.round(a.size/1024) + 'KB</span>';
+    var btn = document.createElement('button');
+    btn.className = 'btn ghost'; btn.style.padding = '3px 6px'; btn.innerHTML = '&times;';
+    btn.onclick = (function(idx) { return function() { atts.splice(idx, 1); renderAttList(); }; })(i);
+    div.appendChild(btn);
+    el.appendChild(div);
+  });
+}
+
+// ── PDF HELPERS ──
+function pH(doc, t, s, c, W) {
+  doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
+  doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
+}
+function pP(doc, ph, x, y, w, h) {
+  if (!ph) return;
+  try { doc.addImage(ph, ph.indexOf('image/png') >= 0 ? 'PNG' : 'JPEG', x, y, w, h, undefined, 'FAST'); doc.setDrawColor(200,200,200); doc.rect(x, y, w, h); } catch(e) {}
+}
+function pL(doc, lbl, val, x, y, w) {
+  w = w || 85;
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130); doc.text(lbl.toUpperCase(), x, y);
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(22,22,22); doc.text(val || '--', x, y+5.5);
+  doc.setDrawColor(215,215,215); doc.line(x, y+7.5, x+w, y+7.5);
+}
+function pS(doc, y, W, M, l1, l2) {
+  doc.setDrawColor(170,170,170); doc.line(M, y, M+72, y); doc.line(M+80, y, M+152, y); doc.line(M+160, y, W-M, y);
+  doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
+  doc.text(l1, M+1, y+4.5); doc.text(l2, M+81, y+4.5); doc.text('Date', M+161, y+4.5);
+}
+function getStu(id) { for (var i = 0; i < students.length; i++) { if (students[i].id === id) return students[i]; } return null; }
+function markDoc(id, field) { for (var i = 0; i < students.length; i++) { if (students[i].id === id) { students[i][field] = true; break; } } }
+
+// ── CONTRACT PDF ──
+function makeCon() {
+  try {
+  var st = getStu(selCon); if (!st) { toast('Select a student first'); return; }
+  // Get jsPDF
+  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
+  var J = _jspdfLib;
+  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
+  pH(doc, 'Student Registration Contract', 'edmontoncardrivingschool@gmail.com', [26,58,92], W);
+  pP(doc, st.photo, W-M-32, y-2, 30, 38);
+  if (st.photo) { doc.setFontSize(7); doc.setTextColor(140,140,140); doc.text('Licence Photo', W-M-17, y+39, {align:'center'}); }
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90);
+  doc.text('Registration Date: ' + (st.reg||'--'), M, y);
+  doc.text('Instructor: ' + (st.inst||'--'), M+90, y); y += 10;
+  pL(doc,'Full Name',st.name,M,y,90); pL(doc,'Licence Number',st.lic,M+97,y,75); y+=14;
+  pL(doc,'Address',st.addr,M,y,90); pL(doc,'Type & Condition',st.type,M+97,y,75); y+=14;
+  pL(doc,'City',[st.city,st.postal].filter(Boolean).join('   '),M,y,90); pL(doc,'Postal Code',st.postal,M+97,y,75); y+=14;
+  pL(doc,'Gender',st.gender,M,y,42); pL(doc,'Date of Issue',st.issue,M+48,y,52); pL(doc,'Minor',st.minor?'Yes':'No',M+107,y,30); y+=14;
+  pL(doc,'Date of Expiry',st.exp,M,y,55); pL(doc,'Date of Birth',st.dob,M+62,y,55); pL(doc,'Cell',st.cell,M+124,y,48); y+=18;
+  doc.setFillColor(237,244,252); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Course Enrolled', M+4, y+7);
+  doc.setFont('helvetica','normal'); doc.setTextColor(35,35,35);
+  var ct = {'GDL':'[X] Class 5 GDL - 10 hrs in-vehicle & 15 hrs in-class - $699','Non-GDL':'[X] Class 5 Non-GDL - 6 hrs in-vehicle & 15 hrs in-class - $450','Brush-up':'[X] Hourly Lessons - $220 per 2 hrs','Other':'[X] Other'};
+  doc.text(ct[st.licClass]||st.licClass, M+4, y+14);
+  if (st.minor) doc.text('MINOR - guardian signature required.', M+4, y+21);
+  y += 32;
+  doc.setFillColor(228,236,246); doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Terms and Conditions', M+4, y+5.5); y += 13;
+  var T = [
+    {h:'I. General Terms'},
+    {b:'Road Test: Student/guardian is responsible for purchasing the road test permit and scheduling.'},
+    {b:'Car for Road Test: Car provided upon request for a nominal fee.'},
+    {b:'Session Duration: Each in-vehicle session will be two hours long.'},
+    {b:'Course Deadline: Course must be completed within six months from registration date.'},
+    {b:'Student Liability: Student liable for Traffic Safety violations or collisions during in-vehicle sessions.'},
+    {b:'Certificate Fee: $50 for a duplicate certificate.'},
+    {h:'II. Fee and Payment'},
+    {b:'Advance Payment: All fees paid in advance by cheque, credit card, debit, or cash.'},
+    {b:'NSF Fee: $50 for NSF cheque. Online Class Fee: Extra $60 for online class.'},
+    {h:'Course Fees:'},
+    {b:'10 Hrs In-Vehicle & 15 Hrs In-Class: $699 | 14 Hrs: $929 | 18 Hrs: $1,169'},
+    {b:'6 Hrs Non-GDL & 15 In-Class: $450 | 2 Hrs Brush-up & Car: $220 | Road Test Car: $100'},
+    {h:'III. Cancellation & Refund'},
+    {b:'12 hours notice required to cancel or change. No Show/Late fee: $50.'},
+    {b:'All refunds subject to $50 admin fee.'},
+    {b:'Pre-course cancellation: full refund minus $50.'},
+    {b:'Post-course start: in-class non-refundable; in-vehicle hours at $130/2 hrs.'},
+    {b:'No refund if not completed within 6 months or student liable for Traffic Safety violation.'}
+  ];
+  doc.setFontSize(8.5);
+  T.forEach(function(t) {
+    if (y > 245) { doc.addPage(); y = 18; }
+    if (t.h) { doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text(t.h, M, y); y += 6; }
+    else {
+      doc.setFont('helvetica','normal'); doc.setTextColor(45,45,45);
+      var lines = doc.splitTextToSize('  - ' + t.b, W-M*2-4);
+      lines.forEach(function(l) { if (y > 250) { doc.addPage(); y = 18; } doc.text(l, M+2, y); y += 4.8; });
+      y += 1;
+    }
+  });
+  y += 8; if (y > 245) { doc.addPage(); y = 20; }
+  var stuSig = getSig('sig-student');
+  var schSig = getSig('sig-school');
+  var sigDate = document.getElementById('sig-date') ? document.getElementById('sig-date').value : td();
+  if (stuSig) { try { doc.addImage(stuSig,'PNG',M,y-20,72,20,undefined,'FAST'); } catch(e) {} }
+  if (schSig) { try { doc.addImage(schSig,'PNG',M+80,y-20,72,20,undefined,'FAST'); } catch(e) {} }
+  doc.setDrawColor(170,170,170); doc.line(M,y,M+72,y); doc.line(M+80,y,M+152,y); doc.line(M+160,y,W-M,y);
+  doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
+  doc.text('Student'+(st.minor?'/Guardian':'')+' signature', M+1, y+4.5);
+  doc.text('Edmonton Car Driving School Representative', M+81, y+4.5);
+  doc.text('Date: '+(sigDate||td()), M+161, y+4.5);
+  doc.setFontSize(7); doc.setTextColor(160,160,160);
+  doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.', M, y+18, {maxWidth: W-M*2});
+  doc.save('Contract_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
+  markDoc(st.id, 'hasCon');
+  renderHome(); toast('Contract PDF downloaded');
+  } catch(err) { toast('PDF error: ' + err.message); console.error(err); }
+}
+
+// ── DPLS0068 PDF ──
+function makeDpl() {
+  var st = getStu(selDpl); if (!st) { toast('Select a student first'); return; }
+  // Get jsPDF
+  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
+  var J = _jspdfLib;
+  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 14, y = 34;
+  pH(doc, 'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)', 'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors', [26,58,92], W);
+  pP(doc, st.photo, W-M-30, y-2, 28, 35);
+  var ivI = gv('d-iv') || st.inst || '', clI = gv('d-cl') || '';
+  var ivG = gv('d-ivg'), clG = gv('d-clg'), ovr = gv('d-ovr');
+  var ivH = document.getElementById('d-ivh').value, clH = document.getElementById('d-clh').value;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Student / Client Licence Information', M, y); y += 7;
+  pL(doc,'Student Name',st.name,M,y,95); pL(doc,"Driver's Licence",st.lic,M+103,y,70); y+=14;
+  pL(doc,'Address',st.addr,M,y,95); pL(doc,'City',st.city,M+103,y,50); y+=14;
+  pL(doc,'Province','AB',M,y,18); pL(doc,'Postal',st.postal,M+24,y,35); pL(doc,'Date of Birth',st.dob,M+66,y,42); pL(doc,'Condition',gv('d-cnd')||st.type||'',M+116,y,42); y+=14;
+  pL(doc,'Cell',st.cell,M,y,55); pL(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
+  pL(doc,'Issue Date',st.issue,M,y,45); pL(doc,'Expiry Date',st.exp,M+52,y,45); pL(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y += 12;
+  // In-Vehicle Sessions
+  doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('In-Vehicle Sessions', M+3, y+5.5);
+  if (ivI) doc.text('Instructor: ' + ivI, M+95, y+5.5);
+  y += 12;
+  var req = st.licClass === 'Non-GDL' ? 6 : 10;
+  var ivS = getSessData('iv', req);
+  ivS.forEach(function(s, i) {
+    if (y > 248) { doc.addPage(); y = 18; }
+    var has = s.date || s.from || s.to;
+    if (has) { doc.setFillColor(245,249,255); doc.rect(M, y-3, W-M*2, 11, 'F'); }
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text((i+1) + '.', M, y+3);
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100); doc.text('DATE', M+8, y);
+    doc.setFontSize(9); doc.setTextColor(s.date?20:160, s.date?20:160, s.date?20:160);
+    doc.text(s.date ? fmtD(s.date) : '_______________', M+8, y+5);
+    doc.setDrawColor(210,210,210); doc.line(M+8, y+7, M+60, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('FROM', M+66, y);
+    doc.setFontSize(9); doc.setTextColor(s.from?20:160, s.from?20:160, s.from?20:160);
+    doc.text(s.from ? fmtT(s.from) : '________', M+66, y+5); doc.line(M+66, y+7, M+98, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('TO', M+104, y);
+    doc.setFontSize(9); doc.setTextColor(s.to?20:160, s.to?20:160, s.to?20:160);
+    doc.text(s.to ? fmtT(s.to) : '________', M+104, y+5); doc.line(M+104, y+7, M+138, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('INSTR', M+144, y); doc.line(M+144, y+7, M+168, y+7);
+    doc.text('STUDENT', M+174, y); doc.line(M+174, y+7, W-M, y+7);
+    y += 14;
+  });
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Total In-Vehicle Hours: ' + (ivH||'___') + '   In-Vehicle Final Grade: ' + (ivG||'___'), M, y); y += 14;
+  // Classroom Sessions
+  doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Classroom Sessions', M+3, y+5.5);
+  if (clI) doc.text('Instructor: ' + clI, M+95, y+5.5);
+  y += 12;
+  var clS = getSessData('cl', 6);
+  clS.forEach(function(s, i) {
+    if (y > 248) { doc.addPage(); y = 18; }
+    var has = s.date || s.from || s.to;
+    if (has) { doc.setFillColor(245,249,255); doc.rect(M, y-3, W-M*2, 11, 'F'); }
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text((i+1) + '.', M, y+3);
+    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100); doc.text('DATE', M+8, y);
+    doc.setFontSize(9); doc.setTextColor(s.date?20:160, s.date?20:160, s.date?20:160);
+    doc.text(s.date ? fmtD(s.date) : '_______________', M+8, y+5);
+    doc.setDrawColor(210,210,210); doc.line(M+8, y+7, M+60, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('FROM', M+66, y);
+    doc.setFontSize(9); doc.setTextColor(s.from?20:160, s.from?20:160, s.from?20:160);
+    doc.text(s.from ? fmtT(s.from) : '________', M+66, y+5); doc.line(M+66, y+7, M+98, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('TO', M+104, y);
+    doc.setFontSize(9); doc.setTextColor(s.to?20:160, s.to?20:160, s.to?20:160);
+    doc.text(s.to ? fmtT(s.to) : '________', M+104, y+5); doc.line(M+104, y+7, M+138, y+7);
+    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('INSTR INITIALS', M+144, y); doc.line(M+144, y+7, W-M, y+7);
+    y += 14;
+  });
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Total Classroom Hours: ' + (clH||'___') + '   Classroom Final Grade: ' + (clG||'___'), M, y); y += 14;
+  if (y > 220) { doc.addPage(); y = 18; }
+  doc.setFillColor(242,242,240); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
+  doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Grade Scale:', M+4, y+7);
+  doc.setFont('helvetica','normal'); doc.setTextColor(40,40,40);
+  doc.text('A (8.0-9.0) Exceeds. B (7.5) Meets. C (6.0-7.0) Additional practice. D (4.0-5.0) Additional training.', M+4, y+14, {maxWidth: W-M*2-8});
+  if (ovr) { doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Overall: ' + ovr, M+4, y+22); }
+  y += 32; if (y > 245) { doc.addPage(); y = 20; }
+  pS(doc, y, W, M, 'Student signature', 'Edmonton Car Driving School Representative');
+  doc.setFontSize(7); doc.setTextColor(155,155,155);
+  doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca', M, y+18, {maxWidth: W-M*2});
+  doc.save('DPLS0068_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
+  markDoc(st.id, 'hasDpl');
+  renderHome(); toast('DPLS0068 downloaded');
+}
+
+// ── COMPLETION PDF ──
+function makeCmp() {
+  var st = getStu(selCmp); if (!st) { toast('Select a student first'); return; }
+  // Get jsPDF
+  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
+  var J = _jspdfLib;
+  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
+  var ivG = gv('c-ivg'), clG = gv('c-clg'), ovr = gv('c-ovr'), notes = gv('c-note');
+  var ivH = document.getElementById('c-ivh').value, clH = document.getElementById('c-clh').value;
+  pH(doc, 'Course Completion Record', 'DPLS0068 Rev. 2026-05  D.R.I.V.E.R.', [10,92,58], W);
+  pP(doc, st.photo, W-M-30, y-2, 28, 35);
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(110,110,110); doc.text('Completion Date: ' + td(), M, y); y += 7;
+  doc.setFontSize(14); doc.setFont('helvetica','bold'); doc.setTextColor(12,12,12); doc.text(st.name, M, y); y += 6;
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(65,65,65);
+  doc.text(st.licClass + ' / ' + (st.inst||'--') + ' / ' + st.cell, M, y); y += 5;
+  doc.text('Lic: ' + (st.lic||'--') + ' / DOB: ' + (st.dob||'--') + ' / Reg: ' + (st.reg||'--'), M, y); y += 14;
+  doc.setFillColor(234,247,240); doc.roundedRect(M,y,W-M*2,30,2,2,'F'); doc.setDrawColor(155,210,180); doc.roundedRect(M,y,W-M*2,30,2,2,'S');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(10,92,58); doc.text('Final Results', M+5, y+8);
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(28,28,28);
+  doc.text('In-Vehicle: ' + (ivH||'--') + ' hrs  Grade: ' + (ivG||'--'), M+5, y+16);
+  doc.text('Classroom: ' + (clH||'--') + ' hrs  Grade: ' + (clG||'--'), M+5, y+23);
+  if (ovr) { doc.setFont('helvetica','bold'); doc.text('Overall Grade: ' + ovr, M+5, y+29); }
+  y += 38;
+  if (notes) {
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(48,48,48); doc.text('Instructor Notes:', M, y); y += 5;
+    doc.setFont('helvetica','normal');
+    doc.splitTextToSize(notes, W-M*2).forEach(function(l) { if (y > 248) { doc.addPage(); y = 18; } doc.text(l, M, y); y += 5; });
+    y += 4;
+  }
+  if (atts.length) {
+    if (y > 235) { doc.addPage(); y = 18; }
+    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Attached Documents:', M, y); y += 6;
+    atts.forEach(function(a, i) {
+      if (y > 250) { doc.addPage(); y = 18; }
+      doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(48,48,48);
+      doc.text((i+1) + '. ' + a.name + ' (' + Math.round(a.size/1024) + 'KB)', M+2, y); y += 5;
+    });
+    y += 4;
+    atts.forEach(function(a, i) {
+      if (a.type.indexOf('image/') !== 0) return;
+      try {
+        if (y > 210) { doc.addPage(); y = 18; }
+        doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(58,58,58);
+        doc.text('Attachment ' + (i+1) + ': ' + a.name, M, y); y += 4;
+        doc.addImage(a.data, a.type.indexOf('png') >= 0 ? 'PNG' : 'JPEG', M, y, W-M*2, 62, undefined, 'FAST');
+        doc.setDrawColor(200,200,200); doc.rect(M, y, W-M*2, 62); y += 67;
+      } catch(e) {}
+    });
+  }
+  if (y > 245) { doc.addPage(); y = 20; }
+  pS(doc, y, W, M, 'Student/Guardian signature', 'Edmonton Car Driving School Representative');
+  doc.save('Completion_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
+  toast('Completion PDF downloaded');
+}
+
+// ── WIRE UP ALL EVENT LISTENERS ──
+
+// ── DRAWING ENGINE ─────────────────────────────────────────────────────
+function initDraw(canvas, lw) {
+  if (canvas._di) return; canvas._di = true;
+  var ctx = canvas.getContext('2d'), down = false, lx = 0, ly = 0;
+  lw = lw || 2;
+
+  // Draw baseline for signature canvases (not initials)
+  if (lw >= 2) {
+    var bly = Math.round(canvas.height * 0.72);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    ctx.moveTo(20, bly); ctx.lineTo(canvas.width - 20, bly);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    var sx = canvas.width/r.width, sy = canvas.height/r.height;
+    var src = e.touches ? e.touches[0] : e;
+    return {x:(src.clientX-r.left)*sx, y:(src.clientY-r.top)*sy};
+  }
+  function start(e) { e.preventDefault(); down=true; var p=pos(e); lx=p.x; ly=p.y; ctx.beginPath(); ctx.arc(lx,ly,lw/2,0,Math.PI*2); ctx.fillStyle='#1a1a1a'; ctx.fill(); }
+  function draw(e) { if(!down) return; e.preventDefault(); var p=pos(e); ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke(); lx=p.x; ly=p.y; }
+  function stop() { down=false; }
+  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',draw);
+  canvas.addEventListener('mouseup',stop); canvas.addEventListener('mouseleave',stop);
+  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',draw,{passive:false});
+  canvas.addEventListener('touchend',stop);
+}
+function clearCanvas(id) {
+  var c = document.getElementById(id);
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  // Redraw baseline for large signature pads
+  if (c.height >= 120) {
+    var bly = Math.round(c.height * 0.72);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    ctx.moveTo(20, bly); ctx.lineTo(c.width - 20, bly);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+function hasContent(canvas) { if(!canvas) return false; var d=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data; for(var i=3;i<d.length;i+=4){if(d[i]>10)return true;} return false; }
+function getSig(id) { var c=document.getElementById(id); return (c&&hasContent(c)) ? c.toDataURL('image/png') : ''; }
+
+function init() {
+  // Tab buttons
+  document.getElementById('tab-home').onclick = function() { goTab('home'); };
+  document.getElementById('tab-reg').onclick  = function() { goTab('reg'); };
+  document.getElementById('tab-con').onclick  = function() { goTab('con'); };
+  document.getElementById('tab-dpl').onclick  = function() { goTab('dpl'); };
+  document.getElementById('tab-cmp').onclick  = function() { goTab('cmp'); };
+
+  // Top bar
+  document.getElementById('btn-save').onclick = doSave;
+  document.getElementById('inp-load').onchange = doLoad;
+
+  // Register buttons
+  var regBtns = document.getElementById('reg-btns');
+  var b1 = document.createElement('button'); b1.className = 'btn g'; b1.innerHTML = '&#128196; Save &amp; Make Contract'; b1.onclick = saveThenCon;
+  var b2 = document.createElement('button'); b2.className = 'btn b'; b2.innerHTML = '&#10003; Save Student'; b2.onclick = saveStu;
+  var b3 = document.createElement('button'); b3.className = 'btn ghost'; b3.innerHTML = '&#8635; Clear'; b3.onclick = clearReg;
+  regBtns.appendChild(b1); regBtns.appendChild(b2); regBtns.appendChild(b3);
+
+  // Photo zone
+  document.getElementById('pz').onclick = function() { openSh('photo'); };
+  document.getElementById('sh-cam').onclick = function() { closeSh('photo'); var i = document.getElementById('inp-cam'); i.value = ''; i.click(); };
+  document.getElementById('sh-lib').onclick = function() { closeSh('photo'); var i = document.getElementById('inp-lib'); i.value = ''; i.click(); };
+  document.getElementById('sh-rem').onclick = function() { closeSh('photo'); remPhoto(); };
+  document.getElementById('sh-photo-cancel').onclick = function() { closeSh('photo'); };
+  document.getElementById('sh-photo').onclick = function(e) { if (e.target === this) closeSh('photo'); };
+  document.getElementById('inp-cam').onchange = gotPhoto;
+  document.getElementById('inp-lib').onchange = gotPhoto;
+
+  // Attach zone
+  document.getElementById('pz-att').onclick = function() { openSh('att'); };
+  document.getElementById('sha-cam').onclick = function() { closeSh('att'); var i = document.getElementById('inp-att'); i.removeAttribute('multiple'); i.setAttribute('capture','environment'); i.value = ''; i.click(); };
+  document.getElementById('sha-lib').onclick = function() { closeSh('att'); var i = document.getElementById('inp-att'); i.setAttribute('multiple',''); i.removeAttribute('capture'); i.accept = 'image/*'; i.value = ''; i.click(); };
+  document.getElementById('sha-file').onclick = function() { closeSh('att'); var i = document.getElementById('inp-att'); i.setAttribute('multiple',''); i.removeAttribute('capture'); i.accept = 'image/*,.pdf'; i.value = ''; i.click(); };
+  document.getElementById('sha-cancel').onclick = function() { closeSh('att'); };
+  document.getElementById('sh-att').onclick = function(e) { if (e.target === this) closeSh('att'); };
+  document.getElementById('inp-att').onchange = gotAtt;
+
+  // Minor toggle
+  document.getElementById('tgl-m').onclick = toggleMinor;
+
+  // Course type options
+  document.querySelectorAll('.co').forEach(function(el) {
+    el.onclick = function() {
+      document.querySelectorAll('.co').forEach(function(x) { x.classList.remove('on'); });
+      this.classList.add('on');
+      selCls = this.getAttribute('data-cls');
+    };
+  });
+
+  // PDF download buttons
+  document.getElementById('btn-con-dl').onclick = makeCon;
+
+  // Signature pad clear buttons
+  document.getElementById('clr-sig-student').addEventListener('click', function() { clearCanvas('sig-student'); });
+  document.getElementById('clr-sig-school').addEventListener('click', function() { clearCanvas('sig-school'); });
+
+  // Init sig pads when contract preview is shown (selectCon triggers it)
+  // Also set today's date as default
+  var sd = document.getElementById('sig-date');
+  if (sd && !sd.value) sd.value = new Date().toLocaleDateString('en-CA');
+  document.getElementById('btn-dpl-dl').onclick = makeDpl;
+  document.getElementById('btn-cmp-dl').onclick = makeCmp;
+
+  // Start
+  renderHome();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    console.error('jsPDF failed to load');
+    // Show warning after page loads
+    setTimeout(function() {
+      var warn = document.createElement('div');
+      warn.style.cssText = 'position:fixed;top:60px;left:10px;right:10px;background:#b03030;color:white;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;text-align:center';
+      warn.textContent = 'PDF library failed to load. Refresh the page to fix.';
+      document.body.appendChild(warn);
+      setTimeout(function(){ warn.remove(); }, 6000);
+    }, 1000);
+  }
+  init();
+});
+
+</script>
+</body>
+</html>
