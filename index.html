@@ -1,4 +1,4 @@
-<!-- CDS v3.0 - 2026-05-26 18:53 -->
+<!-- ECDS v3.1 - 2026-05-26 19:26 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ECDS"/>
-<title>Car Driving School</title>
+<title>Edmonton Car Driving School</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -128,7 +128,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
 <body>
 <div id="toast" class="toast"></div>
 <div class="topbar">
-  <div><div class="n">Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
+  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
   <div class="tr">
     <button class="btn g sm" id="btn-save">&#11015; Save</button>
     <label class="btn sm" style="cursor:pointer">&#11014; Load<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
@@ -762,6 +762,8 @@ function selectDpl(id) {
   document.getElementById('d-clh').value = 15;
   makeSessRows('iv-wrap', n, 'iv');
   makeSessRows('cl-wrap', 6, 'cl');
+  // Init page 2 after DOM is ready
+  setTimeout(initPage2, 100);
 }
 
 function selectCmp(id) {
@@ -899,7 +901,7 @@ function pH(doc, t, s, c, W) {
   doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Car Driving School  587-778-3633', W/2, 18, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
   doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
 }
 function pP(doc, ph, x, y, w, h) {
@@ -990,7 +992,7 @@ function makeCon() {
   doc.setDrawColor(170,170,170); doc.line(M,y,M+72,y); doc.line(M+80,y,M+152,y); doc.line(M+160,y,W-M,y);
   doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
   doc.text('Student'+(st.minor?'/Guardian':'')+' signature', M+1, y+4.5);
-  doc.text('Car Driving School Representative', M+81, y+4.5);
+  doc.text('Edmonton Car Driving School Representative', M+81, y+4.5);
   doc.text('Date: '+(sigDate||td()), M+161, y+4.5);
   doc.setFontSize(7); doc.setTextColor(160,160,160);
   doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.', M, y+18, {maxWidth: W-M*2});
@@ -1019,7 +1021,7 @@ function makeDpl() {
   pL(doc,'Province','AB',M,y,18); pL(doc,'Postal',st.postal,M+24,y,35); pL(doc,'Date of Birth',st.dob,M+66,y,42); pL(doc,'Condition',gv('d-cnd')||st.type||'',M+116,y,42); y+=14;
   pL(doc,'Cell',st.cell,M,y,55); pL(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
   pL(doc,'Issue Date',st.issue,M,y,45); pL(doc,'Expiry Date',st.exp,M+52,y,45); pL(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Car Driving School   Phone: 587-778-3633', M, y); y += 12;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y += 12;
   // In-Vehicle Sessions
   doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
   doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
@@ -1083,7 +1085,7 @@ function makeDpl() {
   doc.text('A (8.0-9.0) Exceeds. B (7.5) Meets. C (6.0-7.0) Additional practice. D (4.0-5.0) Additional training.', M+4, y+14, {maxWidth: W-M*2-8});
   if (ovr) { doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Overall: ' + ovr, M+4, y+22); }
   y += 32; if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student signature', 'Car Driving School Representative');
+  pS(doc, y, W, M, 'Student signature', 'Edmonton Car Driving School Representative');
   doc.setFontSize(7); doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca', M, y+18, {maxWidth: W-M*2});
   doc.save('DPLS0068_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
@@ -1142,7 +1144,7 @@ function makeCmp() {
     });
   }
   if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student/Guardian signature', 'Car Driving School Representative');
+  pS(doc, y, W, M, 'Student/Guardian signature', 'Edmonton Car Driving School Representative');
   doc.save('Completion_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
   toast('Completion PDF downloaded');
 }
@@ -1202,6 +1204,142 @@ function clearCanvas(id) {
 }
 function hasContent(canvas) { if(!canvas) return false; var d=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data; for(var i=3;i<d.length;i+=4){if(d[i]>10)return true;} return false; }
 function getSig(id) { var c=document.getElementById(id); return (c&&hasContent(c)) ? c.toDataURL('image/png') : ''; }
+
+
+// ── SKILLS & LESSON PLAN ──────────────────────────────────────────────
+var SKILLS = [
+  {cat:'Vehicle-Handling (Psychomotor)'},
+  {id:'sk-steer',   name:'Steering'},
+  {id:'sk-brake',   name:'Braking'},
+  {id:'sk-speed',   name:'Speed Control'},
+  {cat:'Visual Skills'},
+  {id:'sk-scan-r',  name:'Scanning - Rear'},
+  {id:'sk-scan-p',  name:'Scanning - Sides (Peripheral)'},
+  {id:'sk-scan-f',  name:'Scanning - Front'},
+  {id:'sk-trk',     name:'Visual - Tracking'},
+  {id:'sk-int',     name:'Visual - Intersections'},
+  {id:'sk-turns',   name:'Visual - Turns'},
+  {id:'sk-park',    name:'Visual - Parking/Backing'},
+  {cat:'Knowledge (Cognitive) Skills'},
+  {id:'sk-judgt',   name:'Judgment - Time'},
+  {id:'sk-judgs',   name:'Judgment - Space'},
+  {id:'sk-judgrw',  name:'Judgment - Right of Way'},
+  {id:'sk-dec',     name:'Decision-Making/Planning'},
+  {id:'sk-signs',   name:'Traffic - Signs'},
+  {id:'sk-lights',  name:'Traffic - Lights'},
+  {id:'sk-marks',   name:'Traffic - Markings'},
+  {id:'sk-rules',   name:'Rules of the Road'},
+  {id:'sk-ccmt',    name:'Commentary'},
+  {cat:'Awareness (Perceptual) Skills'},
+  {id:'sk-hazm',    name:'Hazard Management'},
+  {id:'sk-haza',    name:'Hazard Awareness'},
+  {id:'sk-risk',    name:'Risk Assessment'},
+  {id:'sk-pcmt',    name:'Commentary'}
+];
+
+var LESSONS = [
+  {title:'Lesson 1 (Hours 1-2)', items:['Pre-trip / Under the Hood (Exterior)','Basic Habits (Interior)','Demonstration Drive / Demo','Start and Stop','Lane Changing / Blind Zone Check','Turns - Right','Turns - Left']},
+  {title:'Lesson 2 (Hours 3-4)', items:['Intersections (Controlled/Uncontrolled)','Multi-Lane Roadways','Turns - Controlled Intersections','Turns - Multi-Lane Intersections','Clutch / Shifting','Backing','Parallel Parking','Angle / Perpendicular Parking','Up / Down Hill Parking']},
+  {title:'Lesson 3 (Hours 5-6)', items:['One-Way Streets','Railway Crossings','Traffic Circles','Highway / Freeway Driving','Hazard Awareness / Commentary','Hazard Management / Commentary']},
+  {title:'Lesson 4 (Hours 7-8)', items:['Merging / Weave Zones','2 & 3 Point Turns','Adverse Conditions / After Dark']},
+  {title:'Lesson 5 (Hours 9-10)', items:['Downtown','Independent Driving']}
+];
+
+var lpChecked = {};
+var skillsInited = false;
+
+function renderSkillsTable() {
+  var tbody = document.getElementById('skills-tbody');
+  if (!tbody) return;
+  var html = '';
+  SKILLS.forEach(function(s) {
+    if (s.cat) {
+      html += '<tr><td class="skill-cat" colspan="6">' + s.cat + '</td></tr>';
+    } else {
+      html += '<tr><td class="skill-name">' + s.name + '</td>';
+      for (var h = 1; h <= 5; h++) {
+        html += '<td style="text-align:center"><input type="text" id="' + s.id + '-h' + h + '" maxlength="3" placeholder="-"/></td>';
+      }
+      html += '</tr>';
+    }
+  });
+  tbody.innerHTML = html;
+}
+
+function renderLessonPlan() {
+  var wrap = document.getElementById('lesson-plan-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  LESSONS.forEach(function(lesson, li) {
+    var group = document.createElement('div');
+    group.className = 'lp-group';
+    var title = document.createElement('div');
+    title.className = 'lp-group-title';
+    title.textContent = lesson.title;
+    group.appendChild(title);
+    lesson.items.forEach(function(item, ii) {
+      var key = 'lp-' + li + '-' + ii;
+      var row = document.createElement('div');
+      row.className = 'lp-item';
+      var cb = document.createElement('div');
+      cb.className = 'lp-cb' + (lpChecked[key] ? ' checked' : '');
+      cb.innerHTML = lpChecked[key] ? '&#10003;' : '';
+      cb.onclick = (function(k, el) {
+        return function() {
+          lpChecked[k] = !lpChecked[k];
+          el.className = 'lp-cb' + (lpChecked[k] ? ' checked' : '');
+          el.innerHTML = lpChecked[k] ? '&#10003;' : '';
+        };
+      })(key, cb);
+      var lbl = document.createElement('div');
+      lbl.className = 'lp-label';
+      lbl.textContent = item;
+      row.appendChild(cb); row.appendChild(lbl);
+      group.appendChild(row);
+    });
+    wrap.appendChild(group);
+  });
+}
+
+function initPage2() {
+  if (!skillsInited) {
+    renderSkillsTable();
+    renderLessonPlan();
+    skillsInited = true;
+  }
+}
+
+function getSkillData() {
+  var data = {};
+  SKILLS.forEach(function(s) {
+    if (!s.id) return;
+    data[s.id] = [];
+    for (var h = 1; h <= 5; h++) {
+      var el = document.getElementById(s.id + '-h' + h);
+      data[s.id].push(el ? el.value.trim() : '');
+    }
+  });
+  return data;
+}
+
+function getLessonChecks() {
+  return LESSONS.map(function(lesson, li) {
+    return {
+      title: lesson.title,
+      all: lesson.items,
+      checked: lesson.items.filter(function(item, ii) { return !!lpChecked['lp-'+li+'-'+ii]; })
+    };
+  });
+}
+
+function getComments() {
+  var c = [];
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('cmt-' + i);
+    c.push(el ? el.value.trim() : '');
+  }
+  return c;
+}
 
 function init() {
   // Tab buttons
