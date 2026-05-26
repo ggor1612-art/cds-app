@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ECDS"/>
-<title>Edmonton Car Driving School</title>
+<title>FCar Driving School</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -111,7 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
 <body>
 <div id="toast" class="toast"></div>
 <div class="topbar">
-  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
+  <div><div class="n">Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
   <div class="tr">
     <button class="btn g sm" id="btn-save">&#11015; Save</button>
     <label class="btn sm" style="cursor:pointer">&#11014; Load<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
@@ -831,7 +831,7 @@ function pH(doc, t, s, c, W) {
   doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Car Driving School  587-778-3633', W/2, 18, {align:'center'});
   doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
 }
 function pP(doc, ph, x, y, w, h) {
@@ -861,7 +861,7 @@ function makeCon() {
   if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
   var J = _jspdfLib;
   var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
-  pH(doc, 'Student Registration Contract', 'edmontoncardrivingschool@gmail.com', [26,58,92], W);
+  pH(doc, 'Student Registration Contract', 'cardrivingschool7@gmail.com', [26,58,92], W);
   pP(doc, st.photo, W-M-32, y-2, 30, 38);
   if (st.photo) { doc.setFontSize(7); doc.setTextColor(140,140,140); doc.text('Licence Photo', W-M-17, y+39, {align:'center'}); }
   doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90);
@@ -922,7 +922,7 @@ function makeCon() {
   doc.setDrawColor(170,170,170); doc.line(M,y,M+72,y); doc.line(M+80,y,M+152,y); doc.line(M+160,y,W-M,y);
   doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
   doc.text('Student'+(st.minor?'/Guardian':'')+' signature', M+1, y+4.5);
-  doc.text('Edmonton Car Driving School Representative', M+81, y+4.5);
+  doc.text('Car Driving School Representative', M+81, y+4.5);
   doc.text('Date: '+(sigDate||td()), M+161, y+4.5);
   doc.setFontSize(7); doc.setTextColor(160,160,160);
   doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.', M, y+18, {maxWidth: W-M*2});
@@ -951,7 +951,7 @@ function makeDpl() {
   pL(doc,'Province','AB',M,y,18); pL(doc,'Postal',st.postal,M+24,y,35); pL(doc,'Date of Birth',st.dob,M+66,y,42); pL(doc,'Condition',gv('d-cnd')||st.type||'',M+116,y,42); y+=14;
   pL(doc,'Cell',st.cell,M,y,55); pL(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
   pL(doc,'Issue Date',st.issue,M,y,45); pL(doc,'Expiry Date',st.exp,M+52,y,45); pL(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y += 12;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Car Driving School   Phone: 587-778-3633', M, y); y += 12;
   // In-Vehicle Sessions
   doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
   doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
@@ -1015,7 +1015,7 @@ function makeDpl() {
   doc.text('A (8.0-9.0) Exceeds. B (7.5) Meets. C (6.0-7.0) Additional practice. D (4.0-5.0) Additional training.', M+4, y+14, {maxWidth: W-M*2-8});
   if (ovr) { doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Overall: ' + ovr, M+4, y+22); }
   y += 32; if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student signature', 'Edmonton Car Driving School Representative');
+  pS(doc, y, W, M, 'Student signature', 'Car Driving School Representative');
   doc.setFontSize(7); doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca', M, y+18, {maxWidth: W-M*2});
   doc.save('DPLS0068_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
@@ -1074,7 +1074,7 @@ function makeCmp() {
     });
   }
   if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student/Guardian signature', 'Edmonton Car Driving School Representative');
+  pS(doc, y, W, M, 'Student/Guardian signature', 'Car Driving School Representative');
   doc.save('Completion_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
   toast('Completion PDF downloaded');
 }
