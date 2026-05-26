@@ -1,4 +1,4 @@
-<!-- CDS v2.9 - 2026-05-26 18:11 -->
+<!-- ECDS v3.0 - 2026-05-26 18:53 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ECDS"/>
-<title>Car Driving School</title>
+<title>Edmonton Car Driving School</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -106,12 +106,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
 .sig-inner-label{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;color:rgba(0,0,0,0.25);pointer-events:none;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
 .sig-row{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
 .sig-hint{font-size:11px;color:var(--t2)}
+
+/* SKILLS TABLE */
+#skills-table td{padding:6px 6px;border-bottom:1px solid rgba(0,0,0,0.07);vertical-align:middle}
+#skills-table tr:nth-child(even) td{background:#fafafa}
+#skills-table .skill-name{font-size:12px;color:var(--t1);font-weight:500}
+#skills-table .skill-cat{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);padding-top:10px;padding-bottom:4px;background:#f0ede8}
+#skills-table input[type=text]{width:44px;height:30px;border:1px solid rgba(0,0,0,0.15);border-radius:5px;text-align:center;font-size:13px;font-weight:700;background:#fff;color:var(--navy);padding:0}
+#skills-table input[type=text]:focus{border-color:var(--navy);outline:none;box-shadow:0 0 0 2px rgba(26,58,92,.1)}
+/* LESSON PLAN */
+.lp-group{margin-bottom:10px}
+.lp-group-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);padding:6px 10px;background:#eef5ff;border-radius:6px;margin-bottom:6px}
+.lp-item{display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px solid rgba(0,0,0,0.05)}
+.lp-item:last-child{border:none}
+.lp-cb{width:18px;height:18px;border:1.5px solid rgba(0,0,0,0.25);border-radius:3px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;-webkit-user-select:none;background:#fff}
+.lp-cb.checked{background:var(--navy);border-color:var(--navy);color:white}
+.lp-label{font-size:12px;color:var(--t1);flex:1}
+
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
 <div class="topbar">
-  <div><div class="n">Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
+  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
   <div class="tr">
     <button class="btn g sm" id="btn-save">&#11015; Save</button>
     <label class="btn sm" style="cursor:pointer">&#11014; Load<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
@@ -248,6 +265,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
         <div class="f"><label>Classroom Hours</label><input id="d-clh" type="number" min="0" max="30"/></div>
       </div>
     </div>
+    <!-- PAGE 2: OVERALL SKILLS -->
+    <div class="card">
+      <div class="csec">&#128200; Overall Skills Rating (Page 2)</div>
+      <p style="font-size:11px;color:var(--t2);margin-bottom:12px;line-height:1.6">Rate each skill at each 2-hour lesson block. Leave blank if not yet covered.</p>
+
+      <!-- RATING SCALE -->
+      <div style="background:#f9f8f6;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.8">
+        <strong style="color:var(--t1);display:block;margin-bottom:4px">Grade Scale:</strong>
+        4.0 Continuous assistance &nbsp;|&nbsp; 5.0 Frequent assistance &nbsp;|&nbsp; 6.0 Occasional assistance<br/>
+        7.0 Minimal assistance &nbsp;|&nbsp; 7.5 Independent 75% &nbsp;|&nbsp; 8.0 Independent 80% &nbsp;|&nbsp; 9.0 Independent 90%
+      </div>
+
+      <!-- SKILL GRID TABLE -->
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table id="skills-table" style="width:100%;border-collapse:collapse;font-size:12px;min-width:420px">
+          <thead>
+            <tr style="background:var(--navy);color:white">
+              <th style="padding:8px 10px;text-align:left;font-size:11px;font-weight:700;min-width:160px">Skill</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;width:52px">Hrs 1-2</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;width:52px">Hrs 3-4</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;width:52px">Hrs 5-6</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;width:52px">Hrs 7-8</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;width:52px">Hrs 9-10</th>
+            </tr>
+          </thead>
+          <tbody id="skills-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAGE 2: LESSON PLAN ACTIVITIES -->
+    <div class="card">
+      <div class="csec">&#9989; Suggested Lesson Plan Activities</div>
+      <p style="font-size:11px;color:var(--t2);margin-bottom:10px">Check each activity when covered during training.</p>
+      <div id="lesson-plan-wrap"></div>
+    </div>
+
+    <!-- PAGE 2: INSTRUCTOR COMMENTS -->
+    <div class="card">
+      <div class="csec">&#128221; Instructor Comments</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="comments-wrap">
+        <div class="f"><label>Lesson 1 (Hrs 1-2)</label><textarea id="cmt-1" placeholder="Comments..." style="height:80px"></textarea></div>
+        <div class="f"><label>Lesson 2 (Hrs 3-4)</label><textarea id="cmt-2" placeholder="Comments..." style="height:80px"></textarea></div>
+        <div class="f"><label>Lesson 3 (Hrs 5-6)</label><textarea id="cmt-3" placeholder="Comments..." style="height:80px"></textarea></div>
+        <div class="f"><label>Lesson 4 (Hrs 7-8)</label><textarea id="cmt-4" placeholder="Comments..." style="height:80px"></textarea></div>
+        <div class="f"><label>Lesson 5 (Hrs 9-10)</label><textarea id="cmt-5" placeholder="Comments..." style="height:80px"></textarea></div>
+      </div>
+    </div>
+
     <div class="card"><button class="btn b" id="btn-dpl-dl">&#11015; Download DPLS0068 PDF</button></div>
   </div>
 </div>
@@ -768,6 +834,8 @@ function makeSessRows(wrap, n, pfx) {
   }
   // Init drawing on all canvases in this wrap
   wEl.querySelectorAll('.ini-canvas').forEach(function(c) { initDraw(c, 1.5); });
+  // Render page 2 content
+  setTimeout(function() { renderSkillsTable(); renderLessonPlan(); }, 50);
 }
 function autoHrs(pfx) {
   var s = null;
@@ -831,7 +899,7 @@ function pH(doc, t, s, c, W) {
   doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Car Driving School  587-778-3633', W/2, 18, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
   doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
 }
 function pP(doc, ph, x, y, w, h) {
@@ -861,7 +929,7 @@ function makeCon() {
   if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
   var J = _jspdfLib;
   var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
-  pH(doc, 'Student Registration Contract', 'cardrivingschool7@gmail.com', [26,58,92], W);
+  pH(doc, 'Student Registration Contract', 'edmontoncardrivingschool@gmail.com', [26,58,92], W);
   pP(doc, st.photo, W-M-32, y-2, 30, 38);
   if (st.photo) { doc.setFontSize(7); doc.setTextColor(140,140,140); doc.text('Licence Photo', W-M-17, y+39, {align:'center'}); }
   doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90);
@@ -922,7 +990,7 @@ function makeCon() {
   doc.setDrawColor(170,170,170); doc.line(M,y,M+72,y); doc.line(M+80,y,M+152,y); doc.line(M+160,y,W-M,y);
   doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
   doc.text('Student'+(st.minor?'/Guardian':'')+' signature', M+1, y+4.5);
-  doc.text('Car Driving School Representative', M+81, y+4.5);
+  doc.text('Edmonton Car Driving School Representative', M+81, y+4.5);
   doc.text('Date: '+(sigDate||td()), M+161, y+4.5);
   doc.setFontSize(7); doc.setTextColor(160,160,160);
   doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.', M, y+18, {maxWidth: W-M*2});
@@ -951,7 +1019,7 @@ function makeDpl() {
   pL(doc,'Province','AB',M,y,18); pL(doc,'Postal',st.postal,M+24,y,35); pL(doc,'Date of Birth',st.dob,M+66,y,42); pL(doc,'Condition',gv('d-cnd')||st.type||'',M+116,y,42); y+=14;
   pL(doc,'Cell',st.cell,M,y,55); pL(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
   pL(doc,'Issue Date',st.issue,M,y,45); pL(doc,'Expiry Date',st.exp,M+52,y,45); pL(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Car Driving School   Phone: 587-778-3633', M, y); y += 12;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y += 12;
   // In-Vehicle Sessions
   doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
   doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
@@ -1015,7 +1083,7 @@ function makeDpl() {
   doc.text('A (8.0-9.0) Exceeds. B (7.5) Meets. C (6.0-7.0) Additional practice. D (4.0-5.0) Additional training.', M+4, y+14, {maxWidth: W-M*2-8});
   if (ovr) { doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Overall: ' + ovr, M+4, y+22); }
   y += 32; if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student signature', 'Car Driving School Representative');
+  pS(doc, y, W, M, 'Student signature', 'Edmonton Car Driving School Representative');
   doc.setFontSize(7); doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca', M, y+18, {maxWidth: W-M*2});
   doc.save('DPLS0068_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
@@ -1074,7 +1142,7 @@ function makeCmp() {
     });
   }
   if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student/Guardian signature', 'Car Driving School Representative');
+  pS(doc, y, W, M, 'Student/Guardian signature', 'Edmonton Car Driving School Representative');
   doc.save('Completion_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
   toast('Completion PDF downloaded');
 }
