@@ -1,4 +1,4 @@
-<!-- ECDS v4.6 - 2026-05-28 23:32 -->
+<!-- CDS v4.6 - 2026-05-28 23:32 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ECDS"/>
-<title>Edmonton Car Driving School</title>
+<title>Car Driving School</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -135,7 +135,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
 <body>
 <div id="toast" class="toast"></div>
 <div class="topbar">
-  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; Auto-save ON &middot; <span id="stu-count">0 students</span></div></div>
+  <div><div class="n">Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; Auto-save ON &middot; <span id="stu-count">0 students</span></div></div>
   <div class="tr" style="display:flex;gap:5px;align-items:center">
     <span id="save-ind" style="font-size:9px;color:rgba(255,255,255,0.45);white-space:nowrap"></span>
     <button class="btn b-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.25)" id="btn-cloud-save">&#9729; iCloud</button>
@@ -1211,7 +1211,7 @@ function pH(doc, t, s, c, W) {
   doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Car Driving School  587-778-3633', W/2, 18, {align:'center'});
   doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
 }
 function pP(doc, ph, x, y, w, h) {
@@ -1273,7 +1273,7 @@ function makeCon() {
   var doc = new J({unit:'mm',format:'letter'}), W=215.9, M=16, y=36;
 
   pdfHdr(doc,'Student Registration Contract',
-    'Edmonton Car Driving School  780-908-2195',
+    'Car Driving School  587-778-3633',
     'edmontoncardrivingschool@gmail.com',[26,58,92],W);
 
   pdfPhoto(doc, st.photo, W-M-34, y-2, 32, 40);
@@ -1318,7 +1318,7 @@ function makeCon() {
   var sigDate = document.getElementById('sig-date') ? document.getElementById('sig-date').value : td();
   if (stuSig) { try { doc.addImage(stuSig,'PNG',M,y-22,74,22,undefined,'FAST'); } catch(e){} }
   if (schSig) { try { doc.addImage(schSig,'PNG',M+80,y-22,74,22,undefined,'FAST'); } catch(e){} }
-  pdfSigLine(doc, y, W, M, 'Student'+(st.minor?'/Guardian':'')+' signature', 'Edmonton Car Driving School Representative');
+  pdfSigLine(doc, y, W, M, 'Student'+(st.minor?'/Guardian':'')+' signature', 'Car Driving School Representative');
   doc.setFontSize(7); doc.setTextColor(160,160,160);
   doc.text('Date: '+(sigDate||td()), M+162, y+4.5);
   doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
@@ -1350,7 +1350,7 @@ function makeDpl() {
   // ── PAGE 1: SESSION LOG ─────────────────────────────────────────────
   pdfHdr(doc,'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)',
     'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors',
-    'Edmonton Car Driving School  780-908-2195',[26,58,92],W);
+    'Car Driving School  587-778-3633',[26,58,92],W);
 
   pdfPhoto(doc, st.photo, W-M-30, y-2, 28, 36);
 
@@ -1367,7 +1367,7 @@ function makeDpl() {
   pdfLbl(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
 
   doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
-  doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y+=12;
+  doc.text('Driving School: Car Driving School   Phone: 587-778-3633', M, y); y+=12;
 
   var req = st.licClass==='Non-GDL' ? 6 : 10;
   var ivI = D.ivInst||st.inst||'', clI = D.clInst||'';
@@ -1448,7 +1448,7 @@ function makeDpl() {
   if(D.overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+D.overall,M+4,y+20);}
   y+=30;
   if(y>245){doc.addPage();y=20;}
-  pdfSigLine(doc,y,W,M,'Student signature','Edmonton Car Driving School Representative');
+  pdfSigLine(doc,y,W,M,'Student signature','Car Driving School Representative');
   doc.setFontSize(7);doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -1590,7 +1590,7 @@ function makeCmp() {
   // ══════════════════════════════════════════════════
   y=36; M=16;
   pdfHdr(doc,'Student Registration Contract',
-    'Edmonton Car Driving School  780-908-2195',
+    'Car Driving School  587-778-3633',
     'edmontoncardrivingschool@gmail.com',[26,58,92],W);
 
   pdfPhoto(doc,st.photo,W-M-34,y-2,32,40);
@@ -1632,7 +1632,7 @@ function makeCmp() {
   var cd=st.conData||{};
   if(cd.stuSig){try{doc.addImage(cd.stuSig,'PNG',M,y-22,74,22,undefined,'FAST');}catch(e){}}
   if(cd.schSig){try{doc.addImage(cd.schSig,'PNG',M+80,y-22,74,22,undefined,'FAST');}catch(e){}}
-  pdfSigLine(doc,y,W,M,'Student'+(st.minor?'/Guardian':'')+' signature','Edmonton Car Driving School Representative');
+  pdfSigLine(doc,y,W,M,'Student'+(st.minor?'/Guardian':'')+' signature','Car Driving School Representative');
   doc.setFontSize(7); doc.setTextColor(160,160,160);
   doc.text('Date: '+(cd.sigDate||td()),M+162,y+4.5);
   doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
@@ -1643,7 +1643,7 @@ function makeCmp() {
   doc.addPage(); y=36; M=14;
   pdfHdr(doc,'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)',
     'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors',
-    'Edmonton Car Driving School  780-908-2195',[26,58,92],W);
+    'Car Driving School  587-778-3633',[26,58,92],W);
 
   pdfPhoto(doc,st.photo,W-M-30,y-2,28,36);
   doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
@@ -1657,7 +1657,7 @@ function makeCmp() {
   pdfLbl(doc,'Issue Date',st.issue,M,y,45); pdfLbl(doc,'Expiry Date',st.exp,M+52,y,45);
   pdfLbl(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
   doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
-  doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195',M,y); y+=12;
+  doc.text('Driving School: Car Driving School   Phone: 587-778-3633',M,y); y+=12;
 
   // In-vehicle
   doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
@@ -1724,7 +1724,7 @@ function makeCmp() {
   if(overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+overall,M+4,y+20);}
   y+=30;
   if(y>245){doc.addPage();y=20;}
-  pdfSigLine(doc,y,W,M,'Student signature','Edmonton Car Driving School Representative');
+  pdfSigLine(doc,y,W,M,'Student signature','Car Driving School Representative');
   doc.setFontSize(7);doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -1822,7 +1822,7 @@ function makeCmp() {
   // ══════════════════════════════════════════════════
   doc.addPage(); y=36; M=18;
   pdfHdr(doc,'Course Completion Record',
-    'Edmonton Car Driving School  780-908-2195',
+    'Car Driving School  587-778-3633',
     'DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58],W);
 
   pdfPhoto(doc,st.photo,W-M-30,y-2,28,36);
@@ -1876,7 +1876,7 @@ function makeCmp() {
   }
 
   if(y>240){doc.addPage();y=22;}
-  pdfSigLine(doc,y,W,M,'Student / Guardian signature','Edmonton Car Driving School Representative');
+  pdfSigLine(doc,y,W,M,'Student / Guardian signature','Car Driving School Representative');
   doc.setFontSize(7);doc.setTextColor(155,155,155);
   doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -1934,7 +1934,7 @@ function printFullRecord(id) {
     // ══════════════════════════════════════════════════════
     // PAGE 1: CONTRACT
     // ══════════════════════════════════════════════════════
-    hdr('Student Registration Contract','Edmonton Car Driving School  780-908-2195','edmontoncardrivingschool@gmail.com',[26,58,92]);
+    hdr('Student Registration Contract','Car Driving School  587-778-3633','edmontoncardrivingschool@gmail.com',[26,58,92]);
     y = 34;
     addPhoto(W-M-32, y-2, 30, 38);
     if(st.photo){doc.setFontSize(7);doc.setTextColor(140,140,140);doc.text('Licence Photo',W-M-17,y+39,{align:'center'});}
@@ -1975,7 +1975,7 @@ function printFullRecord(id) {
     var sigDate=document.getElementById('sig-date')?document.getElementById('sig-date').value:td();
     if(stuSig){try{doc.addImage(stuSig,'PNG',M,y-20,72,20,undefined,'FAST');}catch(e){}}
     if(schSig){try{doc.addImage(schSig,'PNG',M+80,y-20,72,20,undefined,'FAST');}catch(e){}}
-    sigLine(y,'Student'+(st.minor?'/Guardian':'')+' signature','Edmonton Car Driving School Representative');
+    sigLine(y,'Student'+(st.minor?'/Guardian':'')+' signature','Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(160,160,160);
     doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
 
@@ -1983,7 +1983,7 @@ function printFullRecord(id) {
     // PAGE 2: DPLS0068 SESSION LOG
     // ══════════════════════════════════════════════════════
     doc.addPage(); y=34;
-    hdr('Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)','DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors','Edmonton Car Driving School  780-908-2195',[26,58,92]);
+    hdr('Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)','DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors','Car Driving School  587-778-3633',[26,58,92]);
     addPhoto(W-M-30,y-2,28,35);
 
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Student / Client Licence Information',M,y);y+=7;
@@ -1993,7 +1993,7 @@ function printFullRecord(id) {
     lbl('Cell',st.cell,M,y,55);lbl('Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55);y+=14;
     lbl('Issue Date',st.issue,M,y,45);lbl('Expiry Date',st.exp,M+52,y,45);lbl('Registration Date',st.reg,M+104,y,55);y+=14;
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
-    doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195',M,y);y+=12;
+    doc.text('Driving School: Car Driving School   Phone: 587-778-3633',M,y);y+=12;
 
     // In-vehicle sessions
     doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
@@ -2061,7 +2061,7 @@ function printFullRecord(id) {
     if(overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+overall,M+4,y+20);}
     y+=30;
     if(y>245){doc.addPage();y=20;}
-    sigLine(y,'Student signature','Edmonton Car Driving School Representative');
+    sigLine(y,'Student signature','Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(155,155,155);
     doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -2153,7 +2153,7 @@ function printFullRecord(id) {
     // PAGE 4: COMPLETION SUMMARY
     // ══════════════════════════════════════════════════════
     doc.addPage(); y=34;
-    hdr('Course Completion Record','Edmonton Car Driving School  780-908-2195','DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58]);
+    hdr('Course Completion Record','Car Driving School  587-778-3633','DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58]);
     addPhoto(W-M-30,y-2,28,35);
 
     doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(110,110,110);
@@ -2181,7 +2181,7 @@ function printFullRecord(id) {
     }
 
     if(y>240){doc.addPage();y=20;}
-    sigLine(y,'Student / Guardian signature','Edmonton Car Driving School Representative');
+    sigLine(y,'Student / Guardian signature','Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(155,155,155);
     doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
