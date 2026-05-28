@@ -1,4 +1,4 @@
-<!-- CDS v3.3 - 2026-05-26 20:06 -->
+<!-- ECDS v4.6 - 2026-05-28 23:32 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="ECDS"/>
-<title>Car Driving School</title>
+<title>Edmonton Car Driving School</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
@@ -123,15 +123,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
 .lp-cb.checked{background:var(--navy);border-color:var(--navy);color:white}
 .lp-label{font-size:12px;color:var(--t1);flex:1}
 
+
+/* INITIALS BOXES ON SESSION ROWS */
+.ini-field{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ini-field label{font-size:9px;color:var(--t2);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.ini-cw{border:1.5px solid rgba(26,58,92,0.4);border-radius:5px;background:#fafafa;overflow:hidden;width:64px;height:36px;touch-action:none;cursor:crosshair}
+.ini-canvas{display:block;width:64px;height:36px;touch-action:none;cursor:crosshair}
+.ini-clear{font-size:9px;color:var(--t3);background:none;border:none;cursor:pointer;padding:1px 0;text-align:center;display:block;width:100%}
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
 <div class="topbar">
-  <div><div class="n">Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; <span id="stu-count">0 students</span></div></div>
-  <div class="tr">
-    <button class="btn g sm" id="btn-save">&#11015; Save</button>
-    <label class="btn sm" style="cursor:pointer">&#11014; Load<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
+  <div><div class="n">Edmonton Car Driving School</div><div class="s">D.R.I.V.E.R. Tracker &middot; Auto-save ON &middot; <span id="stu-count">0 students</span></div></div>
+  <div class="tr" style="display:flex;gap:5px;align-items:center">
+    <span id="save-ind" style="font-size:9px;color:rgba(255,255,255,0.45);white-space:nowrap"></span>
+    <button class="btn b-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.25)" id="btn-cloud-save">&#9729; iCloud</button>
+    <button class="btn g sm" id="btn-save">&#11015; Export</button>
+    <label class="btn b-sm" style="background:rgba(255,255,255,0.12);color:white;border:1px solid rgba(255,255,255,0.2);cursor:pointer">&#11014; Import<input type="file" accept=".json" id="inp-load" style="display:none"/></label>
   </div>
 </div>
 <div class="tabs">
@@ -195,6 +204,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;backgroun
       <div class="co" data-cls="Non-GDL"><div class="co-t">Class 5 Non-GDL</div><div class="co-d">6 hrs in-vehicle &middot; 15 in-class</div><div class="co-p">$450</div></div>
       <div class="co" data-cls="Brush-up"><div class="co-t">Hourly Lessons</div><div class="co-d">Brush-up sessions</div><div class="co-p">$220/2hrs</div></div>
       <div class="co" data-cls="Other"><div class="co-t">Other</div><div class="co-d">Custom arrangement</div><div class="co-p">--</div></div>
+    </div>
+    <div id="other-note-wrap" style="display:none;margin-top:8px">
+      <div class="f"><label>Describe Course / Other Arrangement</label><input id="r-other-note" placeholder="e.g. 14 hrs in-vehicle, refresher course, commercial prep..."/></div>
     </div>
   </div>
   <div class="brow" id="reg-btns"></div>
@@ -431,16 +443,165 @@ function avHtml(s, sz) {
 }
 
 // ── SAVE / LOAD ──
+
+// ── CLOUD / iCLOUD SAVE ───────────────────────────────────────────────
+function cloudSave() {
+  if (!students.length) { toast('No students to save yet'); return; }
+  try {
+    var json = JSON.stringify(students, null, 2);
+    var blob = new Blob([json], {type: 'application/json'});
+    var url = URL.createObjectURL(blob);
+
+    var fname;
+    if (students.length === 1) {
+      var s0 = students[0];
+      var ini = (s0.name||'').split(' ').map(function(p){return p[0]||'';}).join('').toUpperCase();
+      var lic = (s0.lic||'').replace(/[^a-zA-Z0-9]/g,'');
+      fname = 'ECDS_' + ini + (lic?'_'+lic:'') + '.json';
+    } else {
+      fname = 'ECDS_' + students.length + 'Students.json';
+    }
+
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Show iOS-specific save to Files instructions
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      showIOSGuide(fname);
+    } else {
+      toast('Exported: ' + fname);
+    }
+  } catch(e) { toast('Export failed: ' + e.message); }
+}
+
+function showIOSGuide(fname) {
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9000;display:flex;align-items:flex-end;padding:0 10px 10px';
+  d.innerHTML =
+    '<div style="background:#fff;border-radius:14px;padding:20px 18px;width:100%;max-width:500px;margin:0 auto">' +
+    '<div style="font-size:17px;font-weight:700;color:#1a3a5c;margin-bottom:12px">Save to iCloud Drive</div>' +
+    '<div style="font-size:13px;line-height:2;color:#333;background:#f5f3ef;border-radius:8px;padding:12px 14px;margin-bottom:14px">' +
+    '1. Tap the <strong>&#11015;</strong> download icon in Safari\'s address bar<br>' +
+    '2. Tap &amp; hold <strong>' + fname + '</strong><br>' +
+    '3. Tap <strong>Share &rarr; Save to Files</strong><br>' +
+    '4. Choose <strong>iCloud Drive</strong> &rarr; tap <strong>Save</strong>' +
+    '</div>' +
+    '<div style="font-size:12px;color:#888;margin-bottom:14px">To restore: tap Import and pick this file from iCloud Drive.</div>' +
+    '<button style="width:100%;padding:13px;background:#1a3a5c;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer" onclick="this.closest(\'div\').parentElement.remove()">Done</button>' +
+    '</div>';
+  d.onclick = function(e){ if(e.target===d) d.remove(); };
+  document.body.appendChild(d);
+}
+
+
+// ── AUTO-SAVE to localStorage (runs silently on every change) ────────
+function autoSave() {
+  // Save to IndexedDB (primary) + localStorage (fallback)
+  var data = JSON.stringify(students);
+
+  // 1. IndexedDB - permanent, no size limit
+  try {
+    var req = indexedDB.open('ecds_db', 1);
+    req.onupgradeneeded = function(e) {
+      e.target.result.createObjectStore('data');
+    };
+    req.onsuccess = function(e) {
+      var db = e.target.result;
+      var tx = db.transaction('data', 'readwrite');
+      tx.objectStore('data').put(data, 'students');
+      tx.oncomplete = function() {
+        var ind = document.getElementById('save-ind');
+        if (ind) {
+          var now = new Date();
+          ind.textContent = '\u2713 ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+          ind.style.color = 'rgba(255,255,255,0.7)';
+        }
+      };
+    };
+  } catch(e) { console.warn('IDB save failed:', e); }
+
+  // 2. localStorage fallback (photos stripped to save space)
+  try {
+    var slim = students.map(function(s) {
+      var c = {}; for (var k in s) c[k] = s[k];
+      c.photo = ''; // skip photos in localStorage
+      return c;
+    });
+    localStorage.setItem('ecds_v1', JSON.stringify(slim));
+  } catch(e) {}
+}
+
+function autoLoad(callback) {
+  // Try IndexedDB first, then localStorage fallback
+  try {
+    var req = indexedDB.open('ecds_db', 1);
+    req.onupgradeneeded = function(e) {
+      e.target.result.createObjectStore('data');
+    };
+    req.onsuccess = function(e) {
+      var db = e.target.result;
+      try {
+        var tx = db.transaction('data', 'readonly');
+        var getReq = tx.objectStore('data').get('students');
+        getReq.onsuccess = function() {
+          if (getReq.result) {
+            try {
+              students = JSON.parse(getReq.result);
+              callback(true, students.length);
+              return;
+            } catch(ex) {}
+          }
+          // IDB empty - try localStorage
+          loadFromLocalStorage(callback);
+        };
+        getReq.onerror = function() { loadFromLocalStorage(callback); };
+      } catch(ex) { loadFromLocalStorage(callback); }
+    };
+    req.onerror = function() { loadFromLocalStorage(callback); };
+  } catch(e) { loadFromLocalStorage(callback); }
+}
+
+function loadFromLocalStorage(callback) {
+  try {
+    var raw = localStorage.getItem('ecds_v1');
+    if (raw) {
+      students = JSON.parse(raw);
+      callback(true, students.length);
+    } else {
+      callback(false, 0);
+    }
+  } catch(e) { callback(false, 0); }
+}
+
+
+// Export backup (manual — gives user a JSON file)
 function doSave() {
   try {
     var blob = new Blob([JSON.stringify(students, null, 2)], {type: 'application/json'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url; a.download = 'ECDS_' + td() + '.json';
+    a.href = url;
+    var fname = 'ECDS_Backup.json';
+    if (students.length === 1) {
+      var s0 = students[0];
+      var parts = (s0.name||'').split(' ');
+      var ini = parts.map(function(p){return p[0]||'';}).join('').toUpperCase();
+      var lic = (s0.lic||'').replace(/[^a-zA-Z0-9]/g,'');
+      fname = 'ECDS_' + ini + (lic?'_'+lic:'') + '.json';
+    } else if (students.length > 1) {
+      fname = 'ECDS_' + students.length + 'Students_Backup.json';
+    }
+    a.download = fname;
     document.body.appendChild(a); a.click();
-    setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
-    toast('Saved as ECDS_' + td() + '.json');
-  } catch(e) { toast('Save failed: ' + e.message); }
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+    toast('Backup exported as ' + fname);
+  } catch(e) { toast('Export failed: ' + e.message); }
 }
 function doLoad(e) {
   var f = e.target.files[0]; if (!f) return;
@@ -449,8 +610,8 @@ function doLoad(e) {
     try {
       var data = JSON.parse(ev.target.result);
       if (!Array.isArray(data)) { toast('Invalid backup file'); return; }
-      students = data; updateCount(); renderHome();
-      toast(students.length + ' students loaded');
+      students = data; updateCount(); autoSave(); renderHome();
+      toast(students.length + ' students imported and saved to device');
     } catch(ex) { toast('Load failed'); }
   };
   r.readAsText(f);
@@ -563,6 +724,9 @@ function clearReg() {
   document.getElementById('spin').style.display = 'none';
   document.querySelectorAll('.co').forEach(function(x, i) { x.classList.toggle('on', i === 0); });
   selCls = 'GDL';
+  sv('r-other-note', '');
+  var owrap = document.getElementById('other-note-wrap');
+  if (owrap) owrap.style.display = 'none';
 }
 function buildStu(id) {
   return {
@@ -571,7 +735,8 @@ function buildStu(id) {
     postal: gv('r-post'), gender: gv('r-gen'), dob: gv('r-dob'), minor: isMinor,
     lic: gv('r-lic'), type: gv('r-type'), inst: gv('r-inst'),
     issue: gv('r-iss'), exp: gv('r-exp'), reg: gv('r-reg'),
-    licClass: selCls, photo: photo, hasCon: false, hasDpl: false
+    licClass: selCls, otherNote: selCls === 'Other' ? gv('r-other-note') : '',
+    photo: photo, hasCon: false, hasDpl: false
   };
 }
 function saveStu() {
@@ -583,7 +748,7 @@ function saveStu() {
     if (ex) { obj.hasCon = ex.hasCon; obj.hasDpl = ex.hasDpl; }
     for (var j = 0; j < students.length; j++) { if (students[j].id === curEdit) { students[j] = obj; break; } }
   } else { students.push(obj); }
-  updateCount(); toast('Student saved - tap Save to backup'); clearReg(); goTab('home');
+  updateCount(); autoSave(); toast('Student saved'); clearReg(); goTab('home');
 }
 function saveThenCon() {
   if (!gv('r-name')) { toast('Full name is required'); return; }
@@ -594,7 +759,7 @@ function saveThenCon() {
     if (ex) { obj.hasCon = ex.hasCon; obj.hasDpl = ex.hasDpl; }
     for (var j = 0; j < students.length; j++) { if (students[j].id === curEdit) { students[j] = obj; break; } }
   } else { students.push(obj); }
-  updateCount(); selCon = obj.id; curEdit = null; clearReg();
+  updateCount(); autoSave(); selCon = obj.id; curEdit = null; clearReg();
   goTab('con');
   renderSel('con-list', selCon, selectCon);
   selectCon(obj.id);
@@ -689,6 +854,12 @@ function editStu(id) {
   document.getElementById('tgl-m').classList.toggle('on', isMinor);
   if (s.photo) { var img = document.getElementById('ph-img'); img.src = s.photo; img.style.display = 'block'; }
   document.querySelectorAll('.co').forEach(function(x) { x.classList.toggle('on', x.getAttribute('data-cls') === s.licClass); });
+  // Restore Other note and show field if needed
+  var wrap = document.getElementById('other-note-wrap');
+  if (wrap) {
+    sv('r-other-note', s.otherNote || '');
+    wrap.style.display = s.licClass === 'Other' ? 'block' : 'none';
+  }
   goTab('reg');
 }
 
@@ -697,7 +868,7 @@ function delStu(id) {
   for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
   if (!confirm('Delete ' + (s ? s.name : '') + '? This cannot be undone.')) return;
   students = students.filter(function(x) { return x.id !== id; });
-  updateCount(); toast('Student deleted'); renderHome();
+  updateCount(); autoSave(); toast('Student deleted'); renderHome();
 }
 
 // ── STUDENT SELECTORS ──
@@ -741,12 +912,54 @@ function selectCon(id) {
   setTimeout(function() {
     var sc = document.getElementById('sig-student');
     var rc = document.getElementById('sig-school');
-    // Reset and reinit drawing with baseline
     if (sc) { sc._di = false; clearCanvas('sig-student'); initDraw(sc, 2.5); }
     if (rc) { rc._di = false; clearCanvas('sig-school'); initDraw(rc, 2.5); }
+    // Restore saved signatures
+    var conData = s.conData || {};
+    if (conData.stuSig && sc) {
+      var img = new Image();
+      img.onload = function() { sc.getContext('2d').drawImage(img, 0, 0, sc.width, sc.height); };
+      img.src = conData.stuSig;
+    }
+    if (conData.schSig && rc) {
+      var img2 = new Image();
+      img2.onload = function() { rc.getContext('2d').drawImage(img2, 0, 0, rc.width, rc.height); };
+      img2.src = conData.schSig;
+    }
     var sd = document.getElementById('sig-date');
-    if (sd && !sd.value) sd.value = new Date().toLocaleDateString('en-CA');
+    if (sd) sd.value = conData.sigDate || new Date().toLocaleDateString('en-CA');
   }, 100);
+}
+
+
+// ── DPLS AUTO-SAVE ────────────────────────────────────────────────────
+var dplsSaveTimer = null;
+function debouncedSaveDpls() {
+  if (!selDpl) return;
+  clearTimeout(dplsSaveTimer);
+  dplsSaveTimer = setTimeout(function() {
+    saveDplsToStudent(selDpl);
+  }, 800); // Save 800ms after last change
+}
+
+// Wire DPLS field change listeners (called after panel is shown)
+function wireDplsAutoSave() {
+  var ids = ['d-iv','d-cl','d-cert','d-cdt','d-cnd','d-ivg','d-clg','d-ovr','d-ivh','d-clh'];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', debouncedSaveDpls);
+      el.addEventListener('change', debouncedSaveDpls);
+    }
+  });
+  // Wire comment textareas
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('cmt-' + i);
+    if (el) el.addEventListener('input', debouncedSaveDpls);
+  }
+  // Wire skill inputs (delegated on the table)
+  var tbody = document.getElementById('skills-tbody');
+  if (tbody) tbody.addEventListener('input', debouncedSaveDpls);
 }
 
 function selectDpl(id) {
@@ -756,15 +969,83 @@ function selectDpl(id) {
   for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
   if (!s) return;
   document.getElementById('dpl-panel').style.display = 'block';
-  sv('d-iv', s.inst);
+
+  var D = s.dplsData || {};
   var n = s.licClass === 'Non-GDL' ? 6 : 10;
   document.getElementById('iv-lbl').textContent = '(' + n + ' sessions / ' + (n*2) + ' hrs)';
-  document.getElementById('d-ivh').value = n;
-  document.getElementById('d-clh').value = 15;
+
+  // Restore saved instructor fields
+  sv('d-iv',   D.ivInst  || s.inst || '');
+  sv('d-cl',   D.clInst  || '');
+  sv('d-cert', D.cert    || '');
+  sv('d-cdt',  D.certDt  || '');
+  sv('d-cnd',  D.cond    || s.type || '');
+  sv('d-ivg',  D.ivGrade || '');
+  sv('d-clg',  D.clGrade || '');
+  sv('d-ovr',  D.overall || '');
+  document.getElementById('d-ivh').value = D.ivHrs || n;
+  document.getElementById('d-clh').value = D.clHrs || 15;
+
+  // Build session rows then restore saved session data
   makeSessRows('iv-wrap', n, 'iv');
   makeSessRows('cl-wrap', 6, 'cl');
-  // Init page 2 after DOM is ready
-  setTimeout(initPage2, 100);
+
+  // Restore session dates/times
+  if (D.ivSess && D.ivSess.length) {
+    D.ivSess.forEach(function(sess, i) {
+      sv('iv-d-'+(i+1), sess.date || '');
+      sv('iv-f-'+(i+1), sess.from || '');
+      sv('iv-t-'+(i+1), sess.to   || '');
+    });
+  }
+  if (D.clSess && D.clSess.length) {
+    D.clSess.forEach(function(sess, i) {
+      sv('cl-d-'+(i+1), sess.date || '');
+      sv('cl-f-'+(i+1), sess.from || '');
+      sv('cl-t-'+(i+1), sess.to   || '');
+    });
+  }
+
+  // Init page 2 after DOM is ready, then restore saved data
+  setTimeout(function() {
+    skillsInited = false; // Force re-init so skills table rebuilds
+    initPage2();
+
+    // Restore skill grades after table is built
+    setTimeout(function() {
+      if (D.skills) {
+        Object.keys(D.skills).forEach(function(sid) {
+          var vals = D.skills[sid];
+          if (vals) vals.forEach(function(v, hi) {
+            var el = document.getElementById(sid + '-h' + (hi+1));
+            if (el && v) el.value = v;
+          });
+        });
+      }
+      // Restore lesson checkboxes
+      lpChecked = {};
+      if (D.lessons) {
+        D.lessons.forEach(function(lesson, li) {
+          if (lesson.checked && lesson.all) {
+            lesson.all.forEach(function(item, ii) {
+              if (lesson.checked.indexOf(item) >= 0) {
+                lpChecked['lp-'+li+'-'+ii] = true;
+              }
+            });
+          }
+        });
+        renderLessonPlan();
+      }
+      // Restore comments
+      if (D.comments) {
+        D.comments.forEach(function(cmt, i) {
+          sv('cmt-'+(i+1), cmt || '');
+        });
+      }
+      // Wire auto-save now that everything is populated
+      wireDplsAutoSave();
+    }, 200);
+  }, 100);
 }
 
 function selectCmp(id) {
@@ -774,7 +1055,16 @@ function selectCmp(id) {
   document.getElementById('cmp-panel').style.display = 'block';
   var s = null;
   for (var i = 0; i < students.length; i++) { if (students[i].id === id) { s = students[i]; break; } }
-  if (s) { document.getElementById('c-ivh').value = s.licClass === 'Non-GDL' ? 6 : 10; document.getElementById('c-clh').value = 15; }
+  if (!s) return;
+  var C = s.cmpData || {};
+  var D = s.dplsData || {};
+  // Restore saved completion data, fall back to DPLS grades, then defaults
+  sv('c-ivg', C.ivGrade || D.ivGrade || '');
+  sv('c-clg', C.clGrade || D.clGrade || '');
+  sv('c-ovr', C.overall || D.overall || '');
+  sv('c-note', C.notes  || '');
+  document.getElementById('c-ivh').value = C.ivHrs || D.ivHrs || (s.licClass === 'Non-GDL' ? 6 : 10);
+  document.getElementById('c-clh').value = C.clHrs || D.clHrs || 15;
 }
 
 // ── SESSIONS ──
@@ -794,19 +1084,21 @@ function makeSessRows(wrap, n, pfx) {
     var dl = document.createElement('label'); dl.textContent = 'Date';
     var di = document.createElement('input'); di.type = 'date';
     di.id = pfx+'-d-'+i; di.setAttribute('data-pfx', pfx); di.className = 'sess-date';
-    di.addEventListener('change', function() { autoHrs(this.getAttribute('data-pfx')); });
+    di.addEventListener('change', function() { autoHrs(this.getAttribute('data-pfx')); debouncedSaveDpls(); });
     df.appendChild(dl); df.appendChild(di); row.appendChild(df);
 
     // From
     var ff = document.createElement('div'); ff.className = 'f';
     var fl = document.createElement('label'); fl.textContent = 'From';
     var fi = document.createElement('input'); fi.type = 'time'; fi.id = pfx+'-f-'+i;
+    fi.addEventListener('change', debouncedSaveDpls);
     ff.appendChild(fl); ff.appendChild(fi); row.appendChild(ff);
 
     // To
     var tf = document.createElement('div'); tf.className = 'f';
     var tl = document.createElement('label'); tl.textContent = 'To';
     var ti = document.createElement('input'); ti.type = 'time'; ti.id = pfx+'-t-'+i;
+    ti.addEventListener('change', debouncedSaveDpls);
     tf.appendChild(tl); tf.appendChild(ti); row.appendChild(tf);
 
     // Instructor initials
@@ -844,9 +1136,26 @@ function autoHrs(pfx) {
   var s = null;
   for (var i = 0; i < students.length; i++) { if (students[i].id === selDpl) { s = students[i]; break; } }
   var n = pfx === 'iv' ? (s && s.licClass === 'Non-GDL' ? 6 : 10) : 6;
-  var c = 0;
-  for (var i = 1; i <= n; i++) { var el = document.getElementById(pfx + '-d-' + i); if (el && el.value) c++; }
-  document.getElementById(pfx === 'iv' ? 'd-ivh' : 'd-clh').value = c * 2;
+  var totalMins = 0;
+  for (var i = 1; i <= n; i++) {
+    var fromEl = document.getElementById(pfx + '-f-' + i);
+    var toEl   = document.getElementById(pfx + '-t-' + i);
+    var dateEl = document.getElementById(pfx + '-d-' + i);
+    if (fromEl && toEl && fromEl.value && toEl.value && dateEl && dateEl.value) {
+      // Calculate actual duration from From/To times
+      var fp = fromEl.value.split(':'), tp = toEl.value.split(':');
+      var fromMins = parseInt(fp[0],10)*60 + parseInt(fp[1],10);
+      var toMins   = parseInt(tp[0],10)*60 + parseInt(tp[1],10);
+      var diff = toMins - fromMins;
+      if (diff > 0) totalMins += diff;
+    } else if (dateEl && dateEl.value) {
+      // Date filled but no times - count as 2 hrs (default session length)
+      totalMins += 120;
+    }
+  }
+  // Round to nearest 0.5 hr
+  var totalHrs = Math.round(totalMins / 30) / 2;
+  document.getElementById(pfx === 'iv' ? 'd-ivh' : 'd-clh').value = totalHrs || 0;
 }
 function getSessData(pfx, n) {
   var rows = [];
@@ -902,7 +1211,7 @@ function pH(doc, t, s, c, W) {
   doc.setFillColor(c[0], c[1], c[2]); doc.rect(0, 0, W, 26, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(17); doc.setFont('helvetica','bold'); doc.text(t, W/2, 11, {align:'center'});
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Car Driving School  587-778-3633', W/2, 18, {align:'center'});
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.text('Edmonton Car Driving School  780-908-2195', W/2, 18, {align:'center'});
   doc.setFontSize(8); doc.text(s, W/2, 23.5, {align:'center'});
 }
 function pP(doc, ph, x, y, w, h) {
@@ -923,430 +1232,657 @@ function pS(doc, y, W, M, l1, l2) {
 function getStu(id) { for (var i = 0; i < students.length; i++) { if (students[i].id === id) return students[i]; } return null; }
 function markDoc(id, field) { for (var i = 0; i < students.length; i++) { if (students[i].id === id) { students[i][field] = true; break; } } }
 
-// ── CONTRACT PDF ──
-function makeCon() {
-  try {
-  var st = getStu(selCon); if (!st) { toast('Select a student first'); return; }
-  // Get jsPDF
-  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
-  var J = _jspdfLib;
-  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
-  pH(doc, 'Student Registration Contract', 'edmontoncardrivingschool@gmail.com', [26,58,92], W);
-  pP(doc, st.photo, W-M-32, y-2, 30, 38);
-  if (st.photo) { doc.setFontSize(7); doc.setTextColor(140,140,140); doc.text('Licence Photo', W-M-17, y+39, {align:'center'}); }
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90);
-  doc.text('Registration Date: ' + (st.reg||'--'), M, y);
-  doc.text('Instructor: ' + (st.inst||'--'), M+90, y); y += 10;
-  pL(doc,'Full Name',st.name,M,y,90); pL(doc,'Licence Number',st.lic,M+97,y,75); y+=14;
-  pL(doc,'Address',st.addr,M,y,90); pL(doc,'Type & Condition',st.type,M+97,y,75); y+=14;
-  pL(doc,'City',[st.city,st.postal].filter(Boolean).join('   '),M,y,90); pL(doc,'Postal Code',st.postal,M+97,y,75); y+=14;
-  pL(doc,'Gender',st.gender,M,y,42); pL(doc,'Date of Issue',st.issue,M+48,y,52); pL(doc,'Minor',st.minor?'Yes':'No',M+107,y,30); y+=14;
-  pL(doc,'Date of Expiry',st.exp,M,y,55); pL(doc,'Date of Birth',st.dob,M+62,y,55); pL(doc,'Cell',st.cell,M+124,y,48); y+=18;
-  doc.setFillColor(237,244,252); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Course Enrolled', M+4, y+7);
-  doc.setFont('helvetica','normal'); doc.setTextColor(35,35,35);
-  var ct = {'GDL':'[X] Class 5 GDL - 10 hrs in-vehicle & 15 hrs in-class - $699','Non-GDL':'[X] Class 5 Non-GDL - 6 hrs in-vehicle & 15 hrs in-class - $450','Brush-up':'[X] Hourly Lessons - $220 per 2 hrs','Other':'[X] Other'};
-  doc.text(ct[st.licClass]||st.licClass, M+4, y+14);
-  if (st.minor) doc.text('MINOR - guardian signature required.', M+4, y+21);
-  y += 32;
-  doc.setFillColor(228,236,246); doc.rect(M,y,W-M*2,8,'F');
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Terms and Conditions', M+4, y+5.5); y += 13;
-  var T = [
-    {h:'I. General Terms'},
-    {b:'Road Test: Student/guardian is responsible for purchasing the road test permit and scheduling.'},
-    {b:'Car for Road Test: Car provided upon request for a nominal fee.'},
-    {b:'Session Duration: Each in-vehicle session will be two hours long.'},
-    {b:'Course Deadline: Course must be completed within six months from registration date.'},
-    {b:'Student Liability: Student liable for Traffic Safety violations or collisions during in-vehicle sessions.'},
-    {b:'Certificate Fee: $50 for a duplicate certificate.'},
-    {h:'II. Fee and Payment'},
-    {b:'Advance Payment: All fees paid in advance by cheque, credit card, debit, or cash.'},
-    {b:'NSF Fee: $50 for NSF cheque. Online Class Fee: Extra $60 for online class.'},
-    {h:'Course Fees:'},
-    {b:'10 Hrs In-Vehicle & 15 Hrs In-Class: $699 | 14 Hrs: $929 | 18 Hrs: $1,169'},
-    {b:'6 Hrs Non-GDL & 15 In-Class: $450 | 2 Hrs Brush-up & Car: $220 | Road Test Car: $100'},
-    {h:'III. Cancellation & Refund'},
-    {b:'12 hours notice required to cancel or change. No Show/Late fee: $50.'},
-    {b:'All refunds subject to $50 admin fee.'},
-    {b:'Pre-course cancellation: full refund minus $50.'},
-    {b:'Post-course start: in-class non-refundable; in-vehicle hours at $130/2 hrs.'},
-    {b:'No refund if not completed within 6 months or student liable for Traffic Safety violation.'}
-  ];
-  doc.setFontSize(8.5);
-  T.forEach(function(t) {
-    if (y > 245) { doc.addPage(); y = 18; }
-    if (t.h) { doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text(t.h, M, y); y += 6; }
-    else {
-      doc.setFont('helvetica','normal'); doc.setTextColor(45,45,45);
-      var lines = doc.splitTextToSize('  - ' + t.b, W-M*2-4);
-      lines.forEach(function(l) { if (y > 250) { doc.addPage(); y = 18; } doc.text(l, M+2, y); y += 4.8; });
-      y += 1;
-    }
-  });
-  y += 8; if (y > 245) { doc.addPage(); y = 20; }
-  var stuSig = getSig('sig-student');
-  var schSig = getSig('sig-school');
-  var sigDate = document.getElementById('sig-date') ? document.getElementById('sig-date').value : td();
-  if (stuSig) { try { doc.addImage(stuSig,'PNG',M,y-20,72,20,undefined,'FAST'); } catch(e) {} }
-  if (schSig) { try { doc.addImage(schSig,'PNG',M+80,y-20,72,20,undefined,'FAST'); } catch(e) {} }
+
+// ── PDF SHARED HELPERS ─────────────────────────────────────────────────
+function pdfHdr(doc, title, sub1, sub2, col, W) {
+  doc.setFillColor(col[0],col[1],col[2]); doc.rect(0,0,W,28,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(15); doc.setFont('helvetica','bold');
+  doc.text(title, W/2, 11, {align:'center'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.text(sub1, W/2, 18, {align:'center'});
+  doc.setFontSize(8); doc.text(sub2, W/2, 24, {align:'center'});
+}
+function pdfLbl(doc, l, v, x, y, w) {
+  w = w||85;
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
+  doc.text(l.toUpperCase(), x, y);
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(22,22,22);
+  doc.text(v||'--', x, y+5.5);
+  doc.setDrawColor(215,215,215); doc.line(x, y+7.5, x+w, y+7.5);
+}
+function pdfPhoto(doc, ph, x, y, w, h) {
+  if (!ph) return;
+  try { doc.addImage(ph, ph.indexOf('image/png')>=0?'PNG':'JPEG', x, y, w, h, undefined, 'FAST'); doc.setDrawColor(200,200,200); doc.rect(x,y,w,h); } catch(e) {}
+}
+function pdfSigLine(doc, y, W, M, l1, l2) {
   doc.setDrawColor(170,170,170); doc.line(M,y,M+72,y); doc.line(M+80,y,M+152,y); doc.line(M+160,y,W-M,y);
   doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(130,130,130);
-  doc.text('Student'+(st.minor?'/Guardian':'')+' signature', M+1, y+4.5);
-  doc.text('Car Driving School Representative', M+81, y+4.5);
-  doc.text('Date: '+(sigDate||td()), M+161, y+4.5);
-  doc.setFontSize(7); doc.setTextColor(160,160,160);
-  doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.', M, y+18, {maxWidth: W-M*2});
-  doc.save('Contract_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
-  markDoc(st.id, 'hasCon');
-  renderHome(); toast('Contract PDF downloaded');
-  } catch(err) { toast('PDF error: ' + err.message); console.error(err); }
+  doc.text(l1, M+1, y+4.5); doc.text(l2, M+81, y+4.5); doc.text('Date', M+161, y+4.5);
+}
+function getJsPDF() {
+  var lib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+  if (!lib) { toast('PDF library not loaded - refresh the page'); return null; }
+  return lib;
 }
 
-// ── DPLS0068 PDF ──
+// ── CONTRACT PDF ───────────────────────────────────────────────────────
+function makeCon() {
+  var st = getStu(selCon); if (!st) { toast('Select a student first'); return; }
+  var J = getJsPDF(); if (!J) return;
+  var doc = new J({unit:'mm',format:'letter'}), W=215.9, M=16, y=36;
+
+  pdfHdr(doc,'Student Registration Contract',
+    'Edmonton Car Driving School  780-908-2195',
+    'edmontoncardrivingschool@gmail.com',[26,58,92],W);
+
+  pdfPhoto(doc, st.photo, W-M-34, y-2, 32, 40);
+  if (st.photo) { doc.setFontSize(7); doc.setTextColor(140,140,140); doc.text('Licence Photo',W-M-18,y+41,{align:'center'}); }
+
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90);
+  doc.text('Registration Date: '+(st.reg||'--'), M, y);
+  doc.text('Instructor: '+(st.inst||'--'), M+90, y); y+=10;
+
+  pdfLbl(doc,'Full Name',st.name,M,y,90); pdfLbl(doc,'Licence Number',st.lic,M+97,y,75); y+=14;
+  pdfLbl(doc,'Address',st.addr,M,y,90); pdfLbl(doc,'Type & Condition',st.type,M+97,y,75); y+=14;
+  pdfLbl(doc,'City',[st.city,st.postal].filter(Boolean).join('   '),M,y,90); pdfLbl(doc,'Postal Code',st.postal,M+97,y,75); y+=14;
+  pdfLbl(doc,'Gender',st.gender,M,y,42); pdfLbl(doc,'Date of Issue',st.issue,M+48,y,52); pdfLbl(doc,'Minor',st.minor?'Yes':'No',M+107,y,30); y+=14;
+  pdfLbl(doc,'Date of Expiry',st.exp,M,y,55); pdfLbl(doc,'Date of Birth',st.dob,M+62,y,55); pdfLbl(doc,'Cell',st.cell,M+124,y,48); y+=18;
+
+  var ct = {GDL:'[X] Class 5 GDL - 10 hrs in-vehicle & 15 hrs in-class - $699','Non-GDL':'[X] Class 5 Non-GDL - 6 hrs in-vehicle & 15 hrs in-class - $450','Brush-up':'[X] Hourly Lessons - $220 per 2 hrs',Other:'[X] Other'};
+  doc.setFillColor(237,244,252); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Course Enrolled',M+4,y+7);
+  doc.setFont('helvetica','normal'); doc.setTextColor(35,35,35);
+  var ctTxt = ct[st.licClass]||st.licClass;
+  if (st.licClass==='Other' && st.otherNote) ctTxt += '  ('+st.otherNote+')';
+  doc.text(ctTxt, M+4, y+14);
+  if (st.minor) doc.text('MINOR - guardian signature required.', M+4, y+21);
+  y+=32;
+
+  doc.setFillColor(228,236,246); doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Terms and Conditions', M+4, y+5.5); y+=13;
+
+  var T=[{h:'I. General Terms'},{b:'Road Test: Student/guardian responsible for purchasing road test permit and scheduling.'},{b:'Car for Road Test: Provided upon request for a nominal fee.'},{b:'Session Duration: Each in-vehicle session will be two hours long.'},{b:'Course Deadline: Must be completed within six months from registration date.'},{b:'Student Liability: Student liable for Traffic Safety violations during in-vehicle sessions.'},{b:'Certificate Fee: $50 for a duplicate certificate.'},{h:'II. Fee and Payment'},{b:'Advance Payment: All fees paid in advance by cheque, credit card, debit, or cash.'},{b:'NSF Fee: $50 for NSF cheque.  Online Class Fee: Extra $60 for online class.'},{h:'Course Fees:'},{b:'10 Hrs In-Vehicle & 15 Hrs In-Class: $699  |  14 Hrs: $929  |  18 Hrs: $1,169'},{b:'6 Hrs Non-GDL & 15 In-Class: $450  |  2 Hrs Brush-up & Car: $220  |  Road Test Car: $100'},{h:'III. Cancellation & Refund'},{b:'12 hours notice required to cancel or change.  No Show/Late fee: $50.'},{b:'All refunds subject to $50 admin fee.  Pre-course: full refund minus $50.'},{b:'Post-course: in-class non-refundable; in-vehicle charged at $130 per 2 hrs.'},{b:'No refund if not completed within 6 months or student liable for Traffic Safety violation.'}];
+  doc.setFontSize(8.5);
+  T.forEach(function(t) {
+    if (y>245) { doc.addPage(); y=18; }
+    if (t.h) { doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text(t.h,M,y); y+=6; }
+    else { doc.setFont('helvetica','normal'); doc.setTextColor(45,45,45); doc.splitTextToSize('  - '+t.b,W-M*2-4).forEach(function(l){if(y>250){doc.addPage();y=18;}doc.text(l,M+2,y);y+=4.8;}); y+=1; }
+  });
+
+  y+=10; if (y>240) { doc.addPage(); y=22; }
+
+  // Embed signatures if drawn
+  var stuSig = getSig('sig-student'), schSig = getSig('sig-school');
+  var sigDate = document.getElementById('sig-date') ? document.getElementById('sig-date').value : td();
+  if (stuSig) { try { doc.addImage(stuSig,'PNG',M,y-22,74,22,undefined,'FAST'); } catch(e){} }
+  if (schSig) { try { doc.addImage(schSig,'PNG',M+80,y-22,74,22,undefined,'FAST'); } catch(e){} }
+  pdfSigLine(doc, y, W, M, 'Student'+(st.minor?'/Guardian':'')+' signature', 'Edmonton Car Driving School Representative');
+  doc.setFontSize(7); doc.setTextColor(160,160,160);
+  doc.text('Date: '+(sigDate||td()), M+162, y+4.5);
+  doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
+
+  doc.save('Contract_'+st.name.replace(/\s+/g,'_')+'_'+td()+'.pdf');
+  // Save signature data to student
+  if (!st.conData) st.conData = {};
+  st.conData.stuSig = stuSig;
+  st.conData.schSig = schSig;
+  st.conData.sigDate = sigDate;
+  for (var i=0;i<students.length;i++){if(students[i].id===st.id){students[i]=st;break;}}
+  markDoc(st.id,'hasCon');
+  autoSave();
+  renderHome(); toast('Contract PDF downloaded');
+}
+
+// ── DPLS0068 PDF (2 pages) ─────────────────────────────────────────────
 function makeDpl() {
   var st = getStu(selDpl); if (!st) { toast('Select a student first'); return; }
-  // Get jsPDF
-  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
-  var J = _jspdfLib;
-  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 14, y = 34;
-  pH(doc, 'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)', 'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors', [26,58,92], W);
-  pP(doc, st.photo, W-M-30, y-2, 28, 35);
-  var ivI = gv('d-iv') || st.inst || '', clI = gv('d-cl') || '';
-  var ivG = gv('d-ivg'), clG = gv('d-clg'), ovr = gv('d-ovr');
-  var ivH = document.getElementById('d-ivh').value, clH = document.getElementById('d-clh').value;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Student / Client Licence Information', M, y); y += 7;
-  pL(doc,'Student Name',st.name,M,y,95); pL(doc,"Driver's Licence",st.lic,M+103,y,70); y+=14;
-  pL(doc,'Address',st.addr,M,y,95); pL(doc,'City',st.city,M+103,y,50); y+=14;
-  pL(doc,'Province','AB',M,y,18); pL(doc,'Postal',st.postal,M+24,y,35); pL(doc,'Date of Birth',st.dob,M+66,y,42); pL(doc,'Condition',gv('d-cnd')||st.type||'',M+116,y,42); y+=14;
-  pL(doc,'Cell',st.cell,M,y,55); pL(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
-  pL(doc,'Issue Date',st.issue,M,y,45); pL(doc,'Expiry Date',st.exp,M+52,y,45); pL(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Driving School: Car Driving School   Phone: 587-778-3633', M, y); y += 12;
-  // In-Vehicle Sessions
+  var J = getJsPDF(); if (!J) return;
+
+  // Save current form data first
+  saveDplsToStudent(st.id);
+  st = getStu(selDpl); // re-fetch after save
+  var D = st.dplsData || {};
+
+  var doc = new J({unit:'mm',format:'letter'}), W=215.9, M=14, y=36;
+
+  // ── PAGE 1: SESSION LOG ─────────────────────────────────────────────
+  pdfHdr(doc,'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)',
+    'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors',
+    'Edmonton Car Driving School  780-908-2195',[26,58,92],W);
+
+  pdfPhoto(doc, st.photo, W-M-30, y-2, 28, 36);
+
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Student / Client Licence Information', M, y); y+=7;
+
+  pdfLbl(doc,'Student Name',st.name,M,y,95); pdfLbl(doc,"Driver's Licence",st.lic,M+103,y,70); y+=14;
+  pdfLbl(doc,'Address',st.addr,M,y,95); pdfLbl(doc,'City',st.city,M+103,y,50); y+=14;
+  pdfLbl(doc,'Province','AB',M,y,18); pdfLbl(doc,'Postal',st.postal,M+24,y,35);
+  pdfLbl(doc,'Date of Birth',st.dob,M+66,y,42); pdfLbl(doc,'Condition',D.cond||st.type||'',M+116,y,42); y+=14;
+  pdfLbl(doc,'Cell',st.cell,M,y,55);
+  pdfLbl(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
+  pdfLbl(doc,'Issue Date',st.issue,M,y,45); pdfLbl(doc,'Expiry Date',st.exp,M+52,y,45);
+  pdfLbl(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
+
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195', M, y); y+=12;
+
+  var req = st.licClass==='Non-GDL' ? 6 : 10;
+  var ivI = D.ivInst||st.inst||'', clI = D.clInst||'';
+
+  // In-vehicle sessions
   doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
   doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
   doc.text('In-Vehicle Sessions', M+3, y+5.5);
-  if (ivI) doc.text('Instructor: ' + ivI, M+95, y+5.5);
-  y += 12;
-  var req = st.licClass === 'Non-GDL' ? 6 : 10;
-  var ivS = getSessData('iv', req);
-  ivS.forEach(function(s, i) {
-    if (y > 248) { doc.addPage(); y = 18; }
-    var has = s.date || s.from || s.to;
-    if (has) { doc.setFillColor(245,249,255); doc.rect(M, y-3, W-M*2, 11, 'F'); }
-    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text((i+1) + '.', M, y+3);
-    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100); doc.text('DATE', M+8, y);
-    doc.setFontSize(9); doc.setTextColor(s.date?20:160, s.date?20:160, s.date?20:160);
-    doc.text(s.date ? fmtD(s.date) : '_______________', M+8, y+5);
-    doc.setDrawColor(210,210,210); doc.line(M+8, y+7, M+60, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('FROM', M+66, y);
-    doc.setFontSize(9); doc.setTextColor(s.from?20:160, s.from?20:160, s.from?20:160);
-    doc.text(s.from ? fmtT(s.from) : '________', M+66, y+5); doc.line(M+66, y+7, M+98, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('TO', M+104, y);
-    doc.setFontSize(9); doc.setTextColor(s.to?20:160, s.to?20:160, s.to?20:160);
-    doc.text(s.to ? fmtT(s.to) : '________', M+104, y+5); doc.line(M+104, y+7, M+138, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('INSTR', M+144, y); doc.line(M+144, y+7, M+168, y+7);
-    doc.text('STUDENT', M+174, y); doc.line(M+174, y+7, W-M, y+7);
-    y += 14;
+  if (ivI) doc.text('Instructor: '+ivI, M+95, y+5.5);
+  y+=12;
+
+  var ivS = D.ivSess || [];
+  while (ivS.length < req) ivS.push({date:'',from:'',to:'',instrIni:'',stuIni:''});
+
+  ivS.forEach(function(s,i) {
+    if (y>248){doc.addPage();y=18;}
+    if (s.date||s.from||s.to){doc.setFillColor(245,249,255);doc.rect(M,y-3,W-M*2,11,'F');}
+    doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text((i+1)+'.',M,y+3);
+    doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,100,100);
+    doc.text('DATE',M+8,y);
+    doc.setFontSize(9);doc.setTextColor(s.date?20:160,s.date?20:160,s.date?20:160);
+    doc.text(s.date?fmtD(s.date):'_______________',M+8,y+5);
+    doc.setDrawColor(210,210,210);doc.line(M+8,y+7,M+60,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('FROM',M+66,y);
+    doc.setFontSize(9);doc.setTextColor(s.from?20:160,s.from?20:160,s.from?20:160);
+    doc.text(s.from?fmtT(s.from):'________',M+66,y+5);doc.line(M+66,y+7,M+98,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('TO',M+104,y);
+    doc.setFontSize(9);doc.setTextColor(s.to?20:160,s.to?20:160,s.to?20:160);
+    doc.text(s.to?fmtT(s.to):'________',M+104,y+5);doc.line(M+104,y+7,M+138,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);
+    doc.text('INSTR',M+144,y);doc.line(M+144,y+7,M+168,y+7);
+    doc.text('STUDENT',M+174,y);doc.line(M+174,y+7,W-M,y+7);
+    if(s.instrIni){try{doc.addImage(s.instrIni,'PNG',M+144,y-9,24,10,undefined,'FAST');}catch(e){}}
+    if(s.stuIni){try{doc.addImage(s.stuIni,'PNG',M+174,y-9,24,10,undefined,'FAST');}catch(e){}}
+    y+=14;
   });
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
-  doc.text('Total In-Vehicle Hours: ' + (ivH||'___') + '   In-Vehicle Final Grade: ' + (ivG||'___'), M, y); y += 14;
-  // Classroom Sessions
-  doc.setFillColor(230,237,246); doc.rect(M,y,W-M*2,8,'F');
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
-  doc.text('Classroom Sessions', M+3, y+5.5);
-  if (clI) doc.text('Instructor: ' + clI, M+95, y+5.5);
-  y += 12;
-  var clS = getSessData('cl', 6);
-  clS.forEach(function(s, i) {
-    if (y > 248) { doc.addPage(); y = 18; }
-    var has = s.date || s.from || s.to;
-    if (has) { doc.setFillColor(245,249,255); doc.rect(M, y-3, W-M*2, 11, 'F'); }
-    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text((i+1) + '.', M, y+3);
-    doc.setFontSize(7.5); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100); doc.text('DATE', M+8, y);
-    doc.setFontSize(9); doc.setTextColor(s.date?20:160, s.date?20:160, s.date?20:160);
-    doc.text(s.date ? fmtD(s.date) : '_______________', M+8, y+5);
-    doc.setDrawColor(210,210,210); doc.line(M+8, y+7, M+60, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('FROM', M+66, y);
-    doc.setFontSize(9); doc.setTextColor(s.from?20:160, s.from?20:160, s.from?20:160);
-    doc.text(s.from ? fmtT(s.from) : '________', M+66, y+5); doc.line(M+66, y+7, M+98, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('TO', M+104, y);
-    doc.setFontSize(9); doc.setTextColor(s.to?20:160, s.to?20:160, s.to?20:160);
-    doc.text(s.to ? fmtT(s.to) : '________', M+104, y+5); doc.line(M+104, y+7, M+138, y+7);
-    doc.setFontSize(7.5); doc.setTextColor(100,100,100); doc.text('INSTR INITIALS', M+144, y); doc.line(M+144, y+7, W-M, y+7);
-    y += 14;
+
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Total In-Vehicle Hours: '+(D.ivHrs||'___')+'   In-Vehicle Final Grade: '+(D.ivGrade||'___'),M,y); y+=14;
+
+  // Classroom sessions
+  doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Classroom Sessions',M+3,y+5.5);
+  if(clI) doc.text('Instructor: '+clI,M+95,y+5.5);
+  y+=12;
+
+  var clS = D.clSess || [];
+  while (clS.length < 6) clS.push({date:'',from:'',to:'',instrIni:''});
+
+  clS.forEach(function(s,i){
+    if(y>248){doc.addPage();y=18;}
+    if(s.date||s.from||s.to){doc.setFillColor(245,249,255);doc.rect(M,y-3,W-M*2,11,'F');}
+    doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text((i+1)+'.',M,y+3);
+    doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,100,100);doc.text('DATE',M+8,y);
+    doc.setFontSize(9);doc.setTextColor(s.date?20:160,s.date?20:160,s.date?20:160);
+    doc.text(s.date?fmtD(s.date):'_______________',M+8,y+5);
+    doc.setDrawColor(210,210,210);doc.line(M+8,y+7,M+60,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('FROM',M+66,y);
+    doc.setFontSize(9);doc.setTextColor(s.from?20:160,s.from?20:160,s.from?20:160);
+    doc.text(s.from?fmtT(s.from):'________',M+66,y+5);doc.line(M+66,y+7,M+98,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('TO',M+104,y);
+    doc.setFontSize(9);doc.setTextColor(s.to?20:160,s.to?20:160,s.to?20:160);
+    doc.text(s.to?fmtT(s.to):'________',M+104,y+5);doc.line(M+104,y+7,M+138,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('INSTR INITIALS',M+144,y);doc.line(M+144,y+7,W-M,y+7);
+    if(s.instrIni){try{doc.addImage(s.instrIni,'PNG',M+144,y-9,30,10,undefined,'FAST');}catch(e){}}
+    y+=14;
   });
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
-  doc.text('Total Classroom Hours: ' + (clH||'___') + '   Classroom Final Grade: ' + (clG||'___'), M, y); y += 14;
-  if (y > 220) { doc.addPage(); y = 18; }
-  doc.setFillColor(242,242,240); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
-  doc.setFontSize(8.5); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Grade Scale:', M+4, y+7);
-  doc.setFont('helvetica','normal'); doc.setTextColor(40,40,40);
-  doc.text('A (8.0-9.0) Exceeds. B (7.5) Meets. C (6.0-7.0) Additional practice. D (4.0-5.0) Additional training.', M+4, y+14, {maxWidth: W-M*2-8});
-  if (ovr) { doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Overall: ' + ovr, M+4, y+22); }
-  y += 32; if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student signature', 'Car Driving School Representative');
-  doc.setFontSize(7); doc.setTextColor(155,155,155);
-  doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca', M, y+18, {maxWidth: W-M*2});
-  doc.save('DPLS0068_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
-  saveDplsToStudent(st.id);
-  markDoc(st.id, 'hasDpl');
-  renderHome(); toast('DPLS0068 downloaded');
+
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Total Classroom Hours: '+(D.clHrs||'___')+'   Classroom Final Grade: '+(D.clGrade||'___'),M,y); y+=14;
+
+  if(y>220){doc.addPage();y=18;}
+  doc.setFillColor(242,242,240);doc.roundedRect(M,y,W-M*2,22,2,2,'F');
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Grade Scale:',M+4,y+7);
+  doc.setFont('helvetica','normal');doc.setTextColor(40,40,40);
+  doc.text('A (8.0-9.0) Exceeds.  B (7.5) Meets.  C (6.0-7.0) Additional practice.  D (4.0-5.0) Additional training.',M+4,y+14,{maxWidth:W-M*2-8});
+  if(D.overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+D.overall,M+4,y+20);}
+  y+=30;
+  if(y>245){doc.addPage();y=20;}
+  pdfSigLine(doc,y,W,M,'Student signature','Edmonton Car Driving School Representative');
+  doc.setFontSize(7);doc.setTextColor(155,155,155);
+  doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
+
+  // ── PAGE 2: OVERALL SKILLS & LESSON PLAN ───────────────────────────
+  doc.addPage(); var p2y=16;
+
+  doc.setFillColor(26,58,92);doc.rect(0,0,W,16,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(11);doc.setFont('helvetica','bold');
+  doc.text('DPLS0068 - Overall Skills & Lesson Plan',M,11);
+  doc.setFontSize(8);doc.setFont('helvetica','normal');
+  doc.text('Student: '+st.name+'   DPLS0068 Rev. 2026-05',W-M,11,{align:'right'});
+  p2y=22;
+
+  // Grade scale
+  doc.setFillColor(242,242,240);doc.roundedRect(M,p2y,W-M*2,14,2,2,'F');
+  doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Grade Scale:',M+3,p2y+5);
+  doc.setFont('helvetica','normal');doc.setTextColor(50,50,50);
+  doc.text('4.0 Continuous  5.0 Frequent  6.0 Occasional  7.0 Minimal  7.5 Indep.75%  8.0 Indep.80%  9.0 Indep.90%',M+3,p2y+11);
+  p2y+=18;
+
+  // Skills grid header
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','bold');
+  doc.text('Skill',M+2,p2y+5.5);
+  ['Hrs 1-2','Hrs 3-4','Hrs 5-6','Hrs 7-8','Hrs 9-10'].forEach(function(hl,hi){
+    doc.text(hl,M+92+hi*22,p2y+5.5);
+  });
+  p2y+=10;
+
+  var skillData = D.skills || {};
+  var rowH=7;
+  SKILLS.forEach(function(s){
+    if(p2y>262){doc.addPage();p2y=14;}
+    if(s.cat){
+      doc.setFillColor(235,240,248);doc.rect(M,p2y-1,W-M*2,rowH+2,'F');
+      doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+      doc.text(s.cat,M+2,p2y+4.5); p2y+=rowH+2;
+    } else {
+      doc.setFillColor(255,255,255);doc.rect(M,p2y-1,W-M*2,rowH+1,'F');
+      doc.setDrawColor(220,220,220);doc.line(M,p2y+rowH,W-M,p2y+rowH);
+      doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);
+      doc.text(s.name,M+2,p2y+4.5);
+      var vals=skillData[s.id]||['','','','',''];
+      vals.forEach(function(v,vi){
+        var cx=M+92+vi*22;
+        doc.setDrawColor(180,180,180);doc.rect(cx-1,p2y,20,rowH,'S');
+        if(v){doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text(v,cx+9,p2y+4.5,{align:'center'});}
+      });
+      p2y+=rowH;
+    }
+  });
+
+  p2y+=10; if(p2y>200){doc.addPage();p2y=14;}
+
+  // Lesson plan
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+  doc.text('Suggested Lesson Plan & Activities',M+3,p2y+5.5); p2y+=10;
+
+  var lessonData = D.lessons || getLessonChecks();
+  var lcols=3, lcolW=(W-M*2)/lcols, lColY=[p2y,p2y,p2y];
+  lessonData.forEach(function(lesson,li){
+    var col=li%lcols, x=M+col*lcolW, lyy=lColY[col];
+    if(lyy>265){doc.addPage();lColY=[14,14,14];lyy=14;}
+    doc.setFillColor(235,240,248);doc.rect(x,lyy-1,lcolW-4,7,'F');
+    doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+    doc.text(lesson.title,x+2,lyy+4); lyy+=8;
+    lesson.all.forEach(function(item){
+      var done=lesson.checked&&lesson.checked.indexOf(item)>=0;
+      doc.setDrawColor(150,150,150);doc.rect(x+2,lyy,4,4,'S');
+      if(done){doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.setFontSize(6);doc.text('X',x+3.2,lyy+3.2);}
+      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);
+      var wrapped=doc.splitTextToSize(item,lcolW-12);
+      doc.text(wrapped,x+8,lyy+3); lyy+=wrapped.length>1?8:6;
+    });
+    lColY[col]=lyy+4;
+  });
+
+  p2y=Math.max(lColY[0],lColY[1],lColY[2])+10;
+  if(p2y>220){doc.addPage();p2y=14;}
+
+  // Comments
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+  doc.text('Instructor Comments',M+3,p2y+5.5); p2y+=10;
+
+  var cmtLabels=['Lesson 1 (Hrs 1-2)','Lesson 2 (Hrs 3-4)','Lesson 3 (Hrs 5-6)','Lesson 4 (Hrs 7-8)','Lesson 5 (Hrs 9-10)'];
+  var cmtW=(W-M*2)/2-3, cmtY=[p2y,p2y];
+  var commentsData = D.comments || ['','','','',''];
+  commentsData.forEach(function(cmt,ci){
+    var col=ci%2, cx2=M+col*(cmtW+6), cyy=cmtY[col];
+    if(cyy>255){doc.addPage();cmtY=[14,14];cyy=14;}
+    doc.setFillColor(248,248,246);doc.rect(cx2,cyy-1,cmtW,20,'F');
+    doc.setDrawColor(210,210,210);doc.rect(cx2,cyy-1,cmtW,20,'S');
+    doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+    doc.text(cmtLabels[ci],cx2+2,cyy+4);
+    if(cmt){doc.setFont('helvetica','normal');doc.setTextColor(40,40,40);doc.text(doc.splitTextToSize(cmt,cmtW-4).slice(0,2),cx2+2,cyy+10);}
+    cmtY[col]=cyy+22;
+  });
+
+  doc.save('DPLS0068_'+st.name.replace(/\s+/g,'_')+'_'+td()+'.pdf');
+  markDoc(st.id,'hasDpl');
+  autoSave();
+  renderHome(); toast('DPLS0068 downloaded (2 pages)');
 }
 
-// ── COMPLETION PDF ──
+// ── COMPLETION PDF ─────────────────────────────────────────────────────
 function makeCmp() {
   var st = getStu(selCmp); if (!st) { toast('Select a student first'); return; }
-  // Get jsPDF
-  var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
-  if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
-  var J = _jspdfLib;
-  var doc = new J({unit:'mm', format:'letter'}), W = 215.9, M = 18, y = 34;
-  var ivG = gv('c-ivg'), clG = gv('c-clg'), ovr = gv('c-ovr'), notes = gv('c-note');
-  var ivH = document.getElementById('c-ivh').value, clH = document.getElementById('c-clh').value;
-  pH(doc, 'Course Completion Record', 'DPLS0068 Rev. 2026-05  D.R.I.V.E.R.', [10,92,58], W);
-  pP(doc, st.photo, W-M-30, y-2, 28, 35);
-  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(110,110,110); doc.text('Completion Date: ' + td(), M, y); y += 7;
-  doc.setFontSize(14); doc.setFont('helvetica','bold'); doc.setTextColor(12,12,12); doc.text(st.name, M, y); y += 6;
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(65,65,65);
-  doc.text(st.licClass + ' / ' + (st.inst||'--') + ' / ' + st.cell, M, y); y += 5;
-  doc.text('Lic: ' + (st.lic||'--') + ' / DOB: ' + (st.dob||'--') + ' / Reg: ' + (st.reg||'--'), M, y); y += 14;
-  doc.setFillColor(234,247,240); doc.roundedRect(M,y,W-M*2,30,2,2,'F'); doc.setDrawColor(155,210,180); doc.roundedRect(M,y,W-M*2,30,2,2,'S');
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(10,92,58); doc.text('Final Results', M+5, y+8);
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(28,28,28);
-  doc.text('In-Vehicle: ' + (ivH||'--') + ' hrs  Grade: ' + (ivG||'--'), M+5, y+16);
-  doc.text('Classroom: ' + (clH||'--') + ' hrs  Grade: ' + (clG||'--'), M+5, y+23);
-  if (ovr) { doc.setFont('helvetica','bold'); doc.text('Overall Grade: ' + ovr, M+5, y+29); }
-  y += 38;
-  if (notes) {
-    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(48,48,48); doc.text('Instructor Notes:', M, y); y += 5;
-    doc.setFont('helvetica','normal');
-    doc.splitTextToSize(notes, W-M*2).forEach(function(l) { if (y > 248) { doc.addPage(); y = 18; } doc.text(l, M, y); y += 5; });
-    y += 4;
-  }
-  if (atts.length) {
-    if (y > 235) { doc.addPage(); y = 18; }
-    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Attached Documents:', M, y); y += 6;
-    atts.forEach(function(a, i) {
-      if (y > 250) { doc.addPage(); y = 18; }
-      doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(48,48,48);
-      doc.text((i+1) + '. ' + a.name + ' (' + Math.round(a.size/1024) + 'KB)', M+2, y); y += 5;
-    });
-    y += 4;
-    atts.forEach(function(a, i) {
-      if (a.type.indexOf('image/') !== 0) return;
-      try {
-        if (y > 210) { doc.addPage(); y = 18; }
-        doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(58,58,58);
-        doc.text('Attachment ' + (i+1) + ': ' + a.name, M, y); y += 4;
-        doc.addImage(a.data, a.type.indexOf('png') >= 0 ? 'PNG' : 'JPEG', M, y, W-M*2, 62, undefined, 'FAST');
-        doc.setDrawColor(200,200,200); doc.rect(M, y, W-M*2, 62); y += 67;
-      } catch(e) {}
-    });
-  }
-  if (y > 245) { doc.addPage(); y = 20; }
-  pS(doc, y, W, M, 'Student/Guardian signature', 'Car Driving School Representative');
-  doc.save('Completion_' + st.name.replace(/\s+/g, '_') + '_' + td() + '.pdf');
-  // Save completion data to student
-  var _cst = getStu(selCmp);
-  if (_cst) {
-    _cst.cmpData = { ivGrade:gv('c-ivg'), clGrade:gv('c-clg'), overall:gv('c-ovr'), ivHrs:document.getElementById('c-ivh').value, clHrs:document.getElementById('c-clh').value, notes:gv('c-note') };
-    for (var _ci=0;_ci<students.length;_ci++){if(students[_ci].id===selCmp){students[_ci]=_cst;break;}}
-  }
-  toast('Completion PDF downloaded');
-}
+  var J = getJsPDF(); if (!J) return;
 
-// ── WIRE UP ALL EVENT LISTENERS ──
+  // Save completion form data to student first
+  var ivG=gv('c-ivg'), clG=gv('c-clg'), ovr=gv('c-ovr'), notes=gv('c-note');
+  var ivH=document.getElementById('c-ivh').value;
+  var clH=document.getElementById('c-clh').value;
+  st.cmpData = {ivGrade:ivG,clGrade:clG,overall:ovr,ivHrs:ivH,clHrs:clH,notes:notes};
+  for(var _si=0;_si<students.length;_si++){if(students[_si].id===st.id){students[_si]=st;break;}}
+  autoSave();
 
-// ── DRAWING ENGINE ─────────────────────────────────────────────────────
-function initDraw(canvas, lw) {
-  if (canvas._di) return; canvas._di = true;
-  var ctx = canvas.getContext('2d'), down = false, lx = 0, ly = 0;
-  lw = lw || 2;
+  var D = st.dplsData || {};
+  var C = st.cmpData || {};
+  var doc = new J({unit:'mm',format:'letter'}), W=215.9, M=14, y;
 
-  // Draw baseline for signature canvases (not initials)
-  if (lw >= 2) {
-    var bly = Math.round(canvas.height * 0.72);
-    ctx.save();
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 6]);
-    ctx.beginPath();
-    ctx.moveTo(20, bly); ctx.lineTo(canvas.width - 20, bly);
-    ctx.stroke();
-    ctx.restore();
-  }
+  var ivInst  = D.ivInst  || st.inst || '';
+  var clInst  = D.clInst  || '';
+  var ivGrade = D.ivGrade || ivG || '';
+  var clGrade = D.clGrade || clG || '';
+  var overall = D.overall || ovr || '';
+  var ivHrs   = D.ivHrs   || ivH || (st.licClass==='Non-GDL'?'6':'10');
+  var clHrs   = D.clHrs   || clH || '15';
+  var ivSess  = D.ivSess  || [];
+  var clSess  = D.clSess  || [];
+  var req     = st.licClass==='Non-GDL' ? 6 : 10;
+  while(ivSess.length<req) ivSess.push({date:'',from:'',to:'',instrIni:'',stuIni:''});
+  while(clSess.length<6)   clSess.push({date:'',from:'',to:'',instrIni:''});
 
-  function pos(e) {
-    var r = canvas.getBoundingClientRect();
-    var sx = canvas.width/r.width, sy = canvas.height/r.height;
-    var src = e.touches ? e.touches[0] : e;
-    return {x:(src.clientX-r.left)*sx, y:(src.clientY-r.top)*sy};
-  }
-  function start(e) { e.preventDefault(); down=true; var p=pos(e); lx=p.x; ly=p.y; ctx.beginPath(); ctx.arc(lx,ly,lw/2,0,Math.PI*2); ctx.fillStyle='#1a1a1a'; ctx.fill(); }
-  function draw(e) { if(!down) return; e.preventDefault(); var p=pos(e); ctx.beginPath(); ctx.moveTo(lx,ly); ctx.lineTo(p.x,p.y); ctx.strokeStyle='#1a1a1a'; ctx.lineWidth=lw; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.stroke(); lx=p.x; ly=p.y; }
-  function stop() { down=false; }
-  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('mouseup',stop); canvas.addEventListener('mouseleave',stop);
-  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',draw,{passive:false});
-  canvas.addEventListener('touchend',stop);
-}
-function clearCanvas(id) {
-  var c = document.getElementById(id);
-  if (!c) return;
-  var ctx = c.getContext('2d');
-  ctx.clearRect(0, 0, c.width, c.height);
-  // Redraw baseline for large signature pads
-  if (c.height >= 120) {
-    var bly = Math.round(c.height * 0.72);
-    ctx.save();
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 6]);
-    ctx.beginPath();
-    ctx.moveTo(20, bly); ctx.lineTo(c.width - 20, bly);
-    ctx.stroke();
-    ctx.restore();
-  }
-}
-function hasContent(canvas) { if(!canvas) return false; var d=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data; for(var i=3;i<d.length;i+=4){if(d[i]>10)return true;} return false; }
-function getSig(id) { var c=document.getElementById(id); return (c&&hasContent(c)) ? c.toDataURL('image/png') : ''; }
+  // ══════════════════════════════════════════════════
+  // PAGE 1: CONTRACT
+  // ══════════════════════════════════════════════════
+  y=36; M=16;
+  pdfHdr(doc,'Student Registration Contract',
+    'Edmonton Car Driving School  780-908-2195',
+    'edmontoncardrivingschool@gmail.com',[26,58,92],W);
 
+  pdfPhoto(doc,st.photo,W-M-34,y-2,32,40);
+  if(st.photo){doc.setFontSize(7);doc.setTextColor(140,140,140);doc.text('Licence Photo',W-M-18,y+41,{align:'center'});}
 
-// ── SKILLS & LESSON PLAN ──────────────────────────────────────────────
-var SKILLS = [
-  {cat:'Vehicle-Handling (Psychomotor)'},
-  {id:'sk-steer',   name:'Steering'},
-  {id:'sk-brake',   name:'Braking'},
-  {id:'sk-speed',   name:'Speed Control'},
-  {cat:'Visual Skills'},
-  {id:'sk-scan-r',  name:'Scanning - Rear'},
-  {id:'sk-scan-p',  name:'Scanning - Sides (Peripheral)'},
-  {id:'sk-scan-f',  name:'Scanning - Front'},
-  {id:'sk-trk',     name:'Visual - Tracking'},
-  {id:'sk-int',     name:'Visual - Intersections'},
-  {id:'sk-turns',   name:'Visual - Turns'},
-  {id:'sk-park',    name:'Visual - Parking/Backing'},
-  {cat:'Knowledge (Cognitive) Skills'},
-  {id:'sk-judgt',   name:'Judgment - Time'},
-  {id:'sk-judgs',   name:'Judgment - Space'},
-  {id:'sk-judgrw',  name:'Judgment - Right of Way'},
-  {id:'sk-dec',     name:'Decision-Making/Planning'},
-  {id:'sk-signs',   name:'Traffic - Signs'},
-  {id:'sk-lights',  name:'Traffic - Lights'},
-  {id:'sk-marks',   name:'Traffic - Markings'},
-  {id:'sk-rules',   name:'Rules of the Road'},
-  {id:'sk-ccmt',    name:'Commentary'},
-  {cat:'Awareness (Perceptual) Skills'},
-  {id:'sk-hazm',    name:'Hazard Management'},
-  {id:'sk-haza',    name:'Hazard Awareness'},
-  {id:'sk-risk',    name:'Risk Assessment'},
-  {id:'sk-pcmt',    name:'Commentary'}
-];
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(90,90,90);
+  doc.text('Registration Date: '+(st.reg||'--'),M,y);
+  doc.text('Instructor: '+(st.inst||'--'),M+90,y); y+=10;
 
-var LESSONS = [
-  {title:'Lesson 1 (Hours 1-2)', items:['Pre-trip / Under the Hood (Exterior)','Basic Habits (Interior)','Demonstration Drive / Demo','Start and Stop','Lane Changing / Blind Zone Check','Turns - Right','Turns - Left']},
-  {title:'Lesson 2 (Hours 3-4)', items:['Intersections (Controlled/Uncontrolled)','Multi-Lane Roadways','Turns - Controlled Intersections','Turns - Multi-Lane Intersections','Clutch / Shifting','Backing','Parallel Parking','Angle / Perpendicular Parking','Up / Down Hill Parking']},
-  {title:'Lesson 3 (Hours 5-6)', items:['One-Way Streets','Railway Crossings','Traffic Circles','Highway / Freeway Driving','Hazard Awareness / Commentary','Hazard Management / Commentary']},
-  {title:'Lesson 4 (Hours 7-8)', items:['Merging / Weave Zones','2 & 3 Point Turns','Adverse Conditions / After Dark']},
-  {title:'Lesson 5 (Hours 9-10)', items:['Downtown','Independent Driving']}
-];
+  pdfLbl(doc,'Full Name',st.name,M,y,90); pdfLbl(doc,'Licence Number',st.lic,M+97,y,75); y+=14;
+  pdfLbl(doc,'Address',st.addr,M,y,90); pdfLbl(doc,'Type & Condition',st.type,M+97,y,75); y+=14;
+  pdfLbl(doc,'City',[st.city,st.postal].filter(Boolean).join('   '),M,y,90); pdfLbl(doc,'Postal Code',st.postal,M+97,y,75); y+=14;
+  pdfLbl(doc,'Gender',st.gender,M,y,42); pdfLbl(doc,'Date of Issue',st.issue,M+48,y,52); pdfLbl(doc,'Minor',st.minor?'Yes':'No',M+107,y,30); y+=14;
+  pdfLbl(doc,'Date of Expiry',st.exp,M,y,55); pdfLbl(doc,'Date of Birth',st.dob,M+62,y,55); pdfLbl(doc,'Cell',st.cell,M+124,y,48); y+=18;
 
-var lpChecked = {};
-var skillsInited = false;
+  var ct={GDL:'[X] Class 5 GDL - 10 hrs in-vehicle & 15 hrs in-class - $699','Non-GDL':'[X] Class 5 Non-GDL - 6 hrs in-vehicle & 15 hrs in-class - $450','Brush-up':'[X] Hourly Lessons - $220 per 2 hrs',Other:'[X] Other'};
+  doc.setFillColor(237,244,252); doc.roundedRect(M,y,W-M*2,24,2,2,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92); doc.text('Course Enrolled',M+4,y+7);
+  doc.setFont('helvetica','normal'); doc.setTextColor(35,35,35);
+  var ctTxt=ct[st.licClass]||st.licClass;
+  if(st.licClass==='Other'&&st.otherNote) ctTxt+='  ('+st.otherNote+')';
+  doc.text(ctTxt,M+4,y+14);
+  if(st.minor) doc.text('MINOR - guardian signature required.',M+4,y+21);
+  y+=32;
 
-function renderSkillsTable() {
-  var tbody = document.getElementById('skills-tbody');
-  if (!tbody) return;
-  var html = '';
-  SKILLS.forEach(function(s) {
-    if (s.cat) {
-      html += '<tr><td class="skill-cat" colspan="6">' + s.cat + '</td></tr>';
+  doc.setFillColor(228,236,246); doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(26,58,92);
+  doc.text('Terms and Conditions',M+4,y+5.5); y+=13;
+
+  var T=[{h:'I. General Terms'},{b:'Road Test: Student/guardian responsible for road test permit and scheduling.'},{b:'Car for Road Test: Provided upon request for a nominal fee.'},{b:'Session Duration: Each in-vehicle session will be two hours long.'},{b:'Course Deadline: Must be completed within six months from registration date.'},{b:'Student Liability: Student liable for Traffic Safety violations during in-vehicle sessions.'},{b:'Certificate Fee: $50 for a duplicate certificate.'},{h:'II. Fee and Payment'},{b:'Advance Payment: All fees paid in advance by cheque, credit card, debit, or cash.'},{b:'NSF Fee: $50 for NSF cheque. Online Class Fee: Extra $60 for online class.'},{h:'Course Fees:'},{b:'10 Hrs In-Vehicle & 15 Hrs In-Class: $699 | 14 Hrs: $929 | 18 Hrs: $1,169'},{b:'6 Hrs Non-GDL & 15 In-Class: $450 | 2 Hrs Brush-up: $220 | Road Test Car: $100'},{h:'III. Cancellation & Refund'},{b:'12 hours notice required. No Show/Late fee: $50. All refunds subject to $50 admin fee.'},{b:'Pre-course: full refund minus $50. Post-course: in-class non-refundable; in-vehicle at $130/2 hrs.'},{b:'No refund if not completed within 6 months or student liable for Traffic Safety violation.'}];
+  doc.setFontSize(8.5);
+  T.forEach(function(t){
+    if(y>245){doc.addPage();y=18;}
+    if(t.h){doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text(t.h,M,y);y+=6;}
+    else{doc.setFont('helvetica','normal');doc.setTextColor(45,45,45);doc.splitTextToSize('  - '+t.b,W-M*2-4).forEach(function(l){if(y>250){doc.addPage();y=18;}doc.text(l,M+2,y);y+=4.8;});y+=1;}
+  });
+  y+=10; if(y>240){doc.addPage();y=22;}
+
+  var cd=st.conData||{};
+  if(cd.stuSig){try{doc.addImage(cd.stuSig,'PNG',M,y-22,74,22,undefined,'FAST');}catch(e){}}
+  if(cd.schSig){try{doc.addImage(cd.schSig,'PNG',M+80,y-22,74,22,undefined,'FAST');}catch(e){}}
+  pdfSigLine(doc,y,W,M,'Student'+(st.minor?'/Guardian':'')+' signature','Edmonton Car Driving School Representative');
+  doc.setFontSize(7); doc.setTextColor(160,160,160);
+  doc.text('Date: '+(cd.sigDate||td()),M+162,y+4.5);
+  doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
+
+  // ══════════════════════════════════════════════════
+  // PAGE 2: DPLS0068 SESSION LOG
+  // ══════════════════════════════════════════════════
+  doc.addPage(); y=36; M=14;
+  pdfHdr(doc,'Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)',
+    'DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors',
+    'Edmonton Car Driving School  780-908-2195',[26,58,92],W);
+
+  pdfPhoto(doc,st.photo,W-M-30,y-2,28,36);
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Student / Client Licence Information',M,y); y+=7;
+  pdfLbl(doc,'Student Name',st.name,M,y,95); pdfLbl(doc,"Driver's Licence",st.lic,M+103,y,70); y+=14;
+  pdfLbl(doc,'Address',st.addr,M,y,95); pdfLbl(doc,'City',st.city,M+103,y,50); y+=14;
+  pdfLbl(doc,'Province','AB',M,y,18); pdfLbl(doc,'Postal',st.postal,M+24,y,35);
+  pdfLbl(doc,'Date of Birth',st.dob,M+66,y,42); pdfLbl(doc,'Condition',D.cond||st.type||'',M+116,y,42); y+=14;
+  pdfLbl(doc,'Cell',st.cell,M,y,55);
+  pdfLbl(doc,'Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55); y+=14;
+  pdfLbl(doc,'Issue Date',st.issue,M,y,45); pdfLbl(doc,'Expiry Date',st.exp,M+52,y,45);
+  pdfLbl(doc,'Registration Date',st.reg,M+104,y,55); y+=14;
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195',M,y); y+=12;
+
+  // In-vehicle
+  doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('In-Vehicle Sessions',M+3,y+5.5);
+  if(ivInst) doc.text('Instructor: '+ivInst,M+95,y+5.5); y+=12;
+
+  ivSess.forEach(function(s,i){
+    if(y>248){doc.addPage();y=18;}
+    if(s.date||s.from||s.to){doc.setFillColor(245,249,255);doc.rect(M,y-3,W-M*2,11,'F');}
+    doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text((i+1)+'.',M,y+3);
+    doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,100,100);doc.text('DATE',M+8,y);
+    doc.setFontSize(9);doc.setTextColor(s.date?20:160,s.date?20:160,s.date?20:160);
+    doc.text(s.date?fmtD(s.date):'_______________',M+8,y+5);
+    doc.setDrawColor(210,210,210);doc.line(M+8,y+7,M+60,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('FROM',M+66,y);
+    doc.setFontSize(9);doc.setTextColor(s.from?20:160,s.from?20:160,s.from?20:160);
+    doc.text(s.from?fmtT(s.from):'________',M+66,y+5);doc.line(M+66,y+7,M+98,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('TO',M+104,y);
+    doc.setFontSize(9);doc.setTextColor(s.to?20:160,s.to?20:160,s.to?20:160);
+    doc.text(s.to?fmtT(s.to):'________',M+104,y+5);doc.line(M+104,y+7,M+138,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);
+    doc.text('INSTR',M+144,y);doc.line(M+144,y+7,M+168,y+7);
+    doc.text('STUDENT',M+174,y);doc.line(M+174,y+7,W-M,y+7);
+    if(s.instrIni){try{doc.addImage(s.instrIni,'PNG',M+144,y-9,24,10,undefined,'FAST');}catch(e){}}
+    if(s.stuIni){try{doc.addImage(s.stuIni,'PNG',M+174,y-9,24,10,undefined,'FAST');}catch(e){}}
+    y+=14;
+  });
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Total In-Vehicle Hours: '+ivHrs+'   In-Vehicle Final Grade: '+(ivGrade||'___'),M,y); y+=14;
+
+  // Classroom
+  doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
+  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Classroom Sessions',M+3,y+5.5);
+  if(clInst) doc.text('Instructor: '+clInst,M+95,y+5.5); y+=12;
+
+  clSess.forEach(function(s,i){
+    if(y>248){doc.addPage();y=18;}
+    if(s.date||s.from||s.to){doc.setFillColor(245,249,255);doc.rect(M,y-3,W-M*2,11,'F');}
+    doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text((i+1)+'.',M,y+3);
+    doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(100,100,100);doc.text('DATE',M+8,y);
+    doc.setFontSize(9);doc.setTextColor(s.date?20:160,s.date?20:160,s.date?20:160);
+    doc.text(s.date?fmtD(s.date):'_______________',M+8,y+5);
+    doc.setDrawColor(210,210,210);doc.line(M+8,y+7,M+60,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('FROM',M+66,y);
+    doc.setFontSize(9);doc.setTextColor(s.from?20:160,s.from?20:160,s.from?20:160);
+    doc.text(s.from?fmtT(s.from):'________',M+66,y+5);doc.line(M+66,y+7,M+98,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('TO',M+104,y);
+    doc.setFontSize(9);doc.setTextColor(s.to?20:160,s.to?20:160,s.to?20:160);
+    doc.text(s.to?fmtT(s.to):'________',M+104,y+5);doc.line(M+104,y+7,M+138,y+7);
+    doc.setFontSize(7.5);doc.setTextColor(100,100,100);doc.text('INSTR INITIALS',M+144,y);doc.line(M+144,y+7,W-M,y+7);
+    if(s.instrIni){try{doc.addImage(s.instrIni,'PNG',M+144,y-9,30,10,undefined,'FAST');}catch(e){}}
+    y+=14;
+  });
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+  doc.text('Total Classroom Hours: '+clHrs+'   Classroom Final Grade: '+(clGrade||'___'),M,y); y+=14;
+
+  if(y>220){doc.addPage();y=18;}
+  doc.setFillColor(242,242,240);doc.roundedRect(M,y,W-M*2,22,2,2,'F');
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Grade Scale:',M+4,y+7);
+  doc.setFont('helvetica','normal');doc.setTextColor(40,40,40);
+  doc.text('A (8.0-9.0) Exceeds.  B (7.5) Meets.  C (6.0-7.0) Additional practice.  D (4.0-5.0) Additional training.',M+4,y+14,{maxWidth:W-M*2-8});
+  if(overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+overall,M+4,y+20);}
+  y+=30;
+  if(y>245){doc.addPage();y=20;}
+  pdfSigLine(doc,y,W,M,'Student signature','Edmonton Car Driving School Representative');
+  doc.setFontSize(7);doc.setTextColor(155,155,155);
+  doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
+
+  // ══════════════════════════════════════════════════
+  // PAGE 3: DPLS0068 OVERALL SKILLS & LESSON PLAN
+  // ══════════════════════════════════════════════════
+  doc.addPage(); var p2y=16;
+  doc.setFillColor(26,58,92);doc.rect(0,0,W,16,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(11);doc.setFont('helvetica','bold');
+  doc.text('DPLS0068 - Overall Skills & Lesson Plan',M,11);
+  doc.setFontSize(8);doc.setFont('helvetica','normal');
+  doc.text('Student: '+st.name+'   DPLS0068 Rev. 2026-05',W-M,11,{align:'right'});
+  p2y=22;
+
+  doc.setFillColor(242,242,240);doc.roundedRect(M,p2y,W-M*2,14,2,2,'F');
+  doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Grade Scale:',M+3,p2y+5);
+  doc.setFont('helvetica','normal');doc.setTextColor(50,50,50);
+  doc.text('4.0 Continuous  5.0 Frequent  6.0 Occasional  7.0 Minimal  7.5 Indep.75%  8.0 Indep.80%  9.0 Indep.90%',M+3,p2y+11);
+  p2y+=18;
+
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','bold');
+  doc.text('Skill',M+2,p2y+5.5);
+  ['Hrs 1-2','Hrs 3-4','Hrs 5-6','Hrs 7-8','Hrs 9-10'].forEach(function(hl,hi){doc.text(hl,M+92+hi*22,p2y+5.5);});
+  p2y+=10;
+
+  var skillData=D.skills||{};
+  var rowH=7;
+  SKILLS.forEach(function(s){
+    if(p2y>262){doc.addPage();p2y=14;}
+    if(s.cat){
+      doc.setFillColor(235,240,248);doc.rect(M,p2y-1,W-M*2,rowH+2,'F');
+      doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+      doc.text(s.cat,M+2,p2y+4.5); p2y+=rowH+2;
     } else {
-      html += '<tr><td class="skill-name">' + s.name + '</td>';
-      for (var h = 1; h <= 5; h++) {
-        html += '<td style="text-align:center"><input type="text" id="' + s.id + '-h' + h + '" maxlength="3" placeholder="-"/></td>';
-      }
-      html += '</tr>';
+      doc.setFillColor(255,255,255);doc.rect(M,p2y-1,W-M*2,rowH+1,'F');
+      doc.setDrawColor(220,220,220);doc.line(M,p2y+rowH,W-M,p2y+rowH);
+      doc.setFontSize(7.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);
+      doc.text(s.name,M+2,p2y+4.5);
+      var vals=skillData[s.id]||['','','','',''];
+      vals.forEach(function(v,vi){
+        var cx=M+92+vi*22;
+        doc.setDrawColor(180,180,180);doc.rect(cx-1,p2y,20,rowH,'S');
+        if(v){doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text(v,cx+9,p2y+4.5,{align:'center'});}
+      });
+      p2y+=rowH;
     }
   });
-  tbody.innerHTML = html;
-}
 
-function renderLessonPlan() {
-  var wrap = document.getElementById('lesson-plan-wrap');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  LESSONS.forEach(function(lesson, li) {
-    var group = document.createElement('div');
-    group.className = 'lp-group';
-    var title = document.createElement('div');
-    title.className = 'lp-group-title';
-    title.textContent = lesson.title;
-    group.appendChild(title);
-    lesson.items.forEach(function(item, ii) {
-      var key = 'lp-' + li + '-' + ii;
-      var row = document.createElement('div');
-      row.className = 'lp-item';
-      var cb = document.createElement('div');
-      cb.className = 'lp-cb' + (lpChecked[key] ? ' checked' : '');
-      cb.innerHTML = lpChecked[key] ? '&#10003;' : '';
-      cb.onclick = (function(k, el) {
-        return function() {
-          lpChecked[k] = !lpChecked[k];
-          el.className = 'lp-cb' + (lpChecked[k] ? ' checked' : '');
-          el.innerHTML = lpChecked[k] ? '&#10003;' : '';
-        };
-      })(key, cb);
-      var lbl = document.createElement('div');
-      lbl.className = 'lp-label';
-      lbl.textContent = item;
-      row.appendChild(cb); row.appendChild(lbl);
-      group.appendChild(row);
+  p2y+=10; if(p2y>200){doc.addPage();p2y=14;}
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+  doc.text('Suggested Lesson Plan & Activities',M+3,p2y+5.5); p2y+=10;
+
+  var lessonData=D.lessons||getLessonChecks();
+  var lcols=3,lcolW=(W-M*2)/lcols,lColY=[p2y,p2y,p2y];
+  lessonData.forEach(function(lesson,li){
+    var col=li%lcols,x=M+col*lcolW,lyy=lColY[col];
+    if(lyy>265){doc.addPage();lColY=[14,14,14];lyy=14;}
+    doc.setFillColor(235,240,248);doc.rect(x,lyy-1,lcolW-4,7,'F');
+    doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+    doc.text(lesson.title,x+2,lyy+4); lyy+=8;
+    lesson.all.forEach(function(item){
+      var done=lesson.checked&&lesson.checked.indexOf(item)>=0;
+      doc.setDrawColor(150,150,150);doc.rect(x+2,lyy,4,4,'S');
+      if(done){doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.setFontSize(6);doc.text('X',x+3.2,lyy+3.2);}
+      doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);
+      var wrapped=doc.splitTextToSize(item,lcolW-12);
+      doc.text(wrapped,x+8,lyy+3); lyy+=wrapped.length>1?8:6;
     });
-    wrap.appendChild(group);
+    lColY[col]=lyy+4;
   });
-}
 
-function initPage2() {
-  if (!skillsInited) {
-    renderSkillsTable();
-    renderLessonPlan();
-    skillsInited = true;
+  p2y=Math.max(lColY[0],lColY[1],lColY[2])+10;
+  if(p2y>220){doc.addPage();p2y=14;}
+  doc.setFillColor(26,58,92);doc.rect(M,p2y,W-M*2,8,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+  doc.text('Instructor Comments',M+3,p2y+5.5); p2y+=10;
+
+  var cmtLabels=['Lesson 1 (Hrs 1-2)','Lesson 2 (Hrs 3-4)','Lesson 3 (Hrs 5-6)','Lesson 4 (Hrs 7-8)','Lesson 5 (Hrs 9-10)'];
+  var cmtW=(W-M*2)/2-3,cmtY=[p2y,p2y];
+  var commentsData=D.comments||['','','','',''];
+  commentsData.forEach(function(cmt,ci){
+    var col=ci%2,cx2=M+col*(cmtW+6),cyy=cmtY[col];
+    if(cyy>255){doc.addPage();cmtY=[14,14];cyy=14;}
+    doc.setFillColor(248,248,246);doc.rect(cx2,cyy-1,cmtW,20,'F');
+    doc.setDrawColor(210,210,210);doc.rect(cx2,cyy-1,cmtW,20,'S');
+    doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text(cmtLabels[ci],cx2+2,cyy+4);
+    if(cmt){doc.setFont('helvetica','normal');doc.setTextColor(40,40,40);doc.text(doc.splitTextToSize(cmt,cmtW-4).slice(0,2),cx2+2,cyy+10);}
+    cmtY[col]=cyy+22;
+  });
+
+  // ══════════════════════════════════════════════════
+  // PAGE 4: COURSE COMPLETION SUMMARY
+  // ══════════════════════════════════════════════════
+  doc.addPage(); y=36; M=18;
+  pdfHdr(doc,'Course Completion Record',
+    'Edmonton Car Driving School  780-908-2195',
+    'DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58],W);
+
+  pdfPhoto(doc,st.photo,W-M-30,y-2,28,36);
+
+  doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(110,110,110);
+  doc.text('Completion Date: '+td(),M,y); y+=7;
+  doc.setFontSize(15);doc.setFont('helvetica','bold');doc.setTextColor(12,12,12);
+  doc.text(st.name,M,y); y+=7;
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(65,65,65);
+  doc.text(st.licClass+' / Instructor: '+(ivInst||'--')+' / Cell: '+(st.cell||'--'),M,y); y+=5;
+  doc.text('Licence: '+(st.lic||'--')+'  DOB: '+(st.dob||'--')+'  Registered: '+(st.reg||'--'),M,y); y+=14;
+
+  doc.setFillColor(234,247,240);doc.roundedRect(M,y,W-M*2,38,2,2,'F');
+  doc.setDrawColor(155,210,180);doc.roundedRect(M,y,W-M*2,38,2,2,'S');
+  doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(10,92,58);
+  doc.text('Final Results',M+5,y+9);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(28,28,28);
+  doc.text('In-Vehicle Training:  '+ivHrs+' hours completed   Grade: '+(ivGrade||'--'),M+5,y+18);
+  doc.text('Classroom Training:  '+clHrs+' hours completed   Grade: '+(clGrade||'--'),M+5,y+26);
+  if(overall){doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Overall Course Grade: '+overall,M+5,y+34);}
+  y+=46;
+
+  var cmpNotes = C.notes || notes || '';
+  if(cmpNotes){
+    doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(48,48,48);doc.text('Instructor Notes:',M,y);y+=5;
+    doc.setFont('helvetica','normal');
+    doc.splitTextToSize(cmpNotes,W-M*2).forEach(function(l){if(y>248){doc.addPage();y=18;}doc.text(l,M,y);y+=5;});
+    y+=4;
   }
-}
 
-function getSkillData() {
-  var data = {};
-  SKILLS.forEach(function(s) {
-    if (!s.id) return;
-    data[s.id] = [];
-    for (var h = 1; h <= 5; h++) {
-      var el = document.getElementById(s.id + '-h' + h);
-      data[s.id].push(el ? el.value.trim() : '');
-    }
-  });
-  return data;
-}
-
-function getLessonChecks() {
-  return LESSONS.map(function(lesson, li) {
-    return {
-      title: lesson.title,
-      all: lesson.items,
-      checked: lesson.items.filter(function(item, ii) { return !!lpChecked['lp-'+li+'-'+ii]; })
-    };
-  });
-}
-
-function getComments() {
-  var c = [];
-  for (var i = 1; i <= 5; i++) {
-    var el = document.getElementById('cmt-' + i);
-    c.push(el ? el.value.trim() : '');
+  if(atts.length){
+    if(y>235){doc.addPage();y=18;}
+    doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
+    doc.text('Attached Documents:',M,y);y+=6;
+    atts.forEach(function(a,i){
+      if(y>250){doc.addPage();y=18;}
+      doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(48,48,48);
+      doc.text((i+1)+'. '+a.name+' ('+Math.round(a.size/1024)+'KB)',M+2,y);y+=5;
+    });
+    y+=4;
+    atts.forEach(function(a,i){
+      if(a.type.indexOf('image/')!==0)return;
+      try{
+        if(y>210){doc.addPage();y=18;}
+        doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(58,58,58);
+        doc.text('Attachment '+(i+1)+': '+a.name,M,y);y+=4;
+        doc.addImage(a.data,a.type.indexOf('png')>=0?'PNG':'JPEG',M,y,W-M*2,62,undefined,'FAST');
+        doc.setDrawColor(200,200,200);doc.rect(M,y,W-M*2,62);y+=67;
+      }catch(e){}
+    });
   }
-  return c;
+
+  if(y>240){doc.addPage();y=22;}
+  pdfSigLine(doc,y,W,M,'Student / Guardian signature','Edmonton Car Driving School Representative');
+  doc.setFontSize(7);doc.setTextColor(155,155,155);
+  doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
+
+  doc.save('CourseRecord_'+st.name.replace(/\s+/g,'_')+'_'+td()+'.pdf');
+  markDoc(st.id,'hasDpl');
+  toast('Course Record PDF saved (4 pages: Contract + DPLS + Skills + Completion)');
 }
 
 
@@ -1358,7 +1894,11 @@ function printFullRecord(id) {
   var _jspdfLib = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
   if (!_jspdfLib) { toast('PDF library not loaded - check internet connection'); return; }
 
-  // Use stored DPLS/completion data, falling back to sensible defaults
+  // Check if data has been saved
+  if (!st.dplsData && !st.cmpData) {
+    toast('Please fill and save DPLS0068 form first before printing full record');
+    return;
+  }
   var D = st.dplsData || {};
   var C = st.cmpData || {};
 
@@ -1394,7 +1934,7 @@ function printFullRecord(id) {
     // ══════════════════════════════════════════════════════
     // PAGE 1: CONTRACT
     // ══════════════════════════════════════════════════════
-    hdr('Student Registration Contract','Car Driving School  587-778-3633','edmontoncardrivingschool@gmail.com',[26,58,92]);
+    hdr('Student Registration Contract','Edmonton Car Driving School  780-908-2195','edmontoncardrivingschool@gmail.com',[26,58,92]);
     y = 34;
     addPhoto(W-M-32, y-2, 30, 38);
     if(st.photo){doc.setFontSize(7);doc.setTextColor(140,140,140);doc.text('Licence Photo',W-M-17,y+39,{align:'center'});}
@@ -1412,7 +1952,10 @@ function printFullRecord(id) {
     var ct={GDL:'[X] Class 5 GDL - 10 hrs in-vehicle & 15 hrs in-class - $699','Non-GDL':'[X] Class 5 Non-GDL - 6 hrs in-vehicle & 15 hrs in-class - $450','Brush-up':'[X] Hourly Lessons - $220 per 2 hrs',Other:'[X] Other'};
     doc.setFillColor(237,244,252);doc.roundedRect(M,y,W-M*2,24,2,2,'F');
     doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Course Enrolled',M+4,y+7);
-    doc.setFont('helvetica','normal');doc.setTextColor(35,35,35);doc.text(ct[st.licClass]||st.licClass,M+4,y+14);
+    doc.setFont('helvetica','normal');doc.setTextColor(35,35,35);
+    var _ctTxt = ct[st.licClass]||st.licClass;
+    if(st.licClass==='Other'&&st.otherNote) _ctTxt += '  ('+st.otherNote+')';
+    doc.text(_ctTxt,M+4,y+14);
     if(st.minor)doc.text('MINOR - guardian signature required.',M+4,y+21);
     y+=32;
 
@@ -1432,7 +1975,7 @@ function printFullRecord(id) {
     var sigDate=document.getElementById('sig-date')?document.getElementById('sig-date').value:td();
     if(stuSig){try{doc.addImage(stuSig,'PNG',M,y-20,72,20,undefined,'FAST');}catch(e){}}
     if(schSig){try{doc.addImage(schSig,'PNG',M+80,y-20,72,20,undefined,'FAST');}catch(e){}}
-    sigLine(y,'Student'+(st.minor?'/Guardian':'')+' signature','Car Driving School Representative');
+    sigLine(y,'Student'+(st.minor?'/Guardian':'')+' signature','Edmonton Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(160,160,160);
     doc.text('Protected A - Information collected under section 4(c) of the Protection of Privacy Act.',M,y+12,{maxWidth:W-M*2});
 
@@ -1440,7 +1983,7 @@ function printFullRecord(id) {
     // PAGE 2: DPLS0068 SESSION LOG
     // ══════════════════════════════════════════════════════
     doc.addPage(); y=34;
-    hdr('Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)','DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors','Car Driving School  587-778-3633',[26,58,92]);
+    hdr('Driving In-Vehicle Evaluation Report (D.R.I.V.E.R.)','DPLS0068 Rev. 2026-05  Alberta Transportation and Economic Corridors','Edmonton Car Driving School  780-908-2195',[26,58,92]);
     addPhoto(W-M-30,y-2,28,35);
 
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Student / Client Licence Information',M,y);y+=7;
@@ -1450,7 +1993,7 @@ function printFullRecord(id) {
     lbl('Cell',st.cell,M,y,55);lbl('Licence Class',st.licClass==='GDL'?'Class 5-GDL':st.licClass==='Non-GDL'?'Class 5':'Class 7',M+62,y,55);y+=14;
     lbl('Issue Date',st.issue,M,y,45);lbl('Expiry Date',st.exp,M+52,y,45);lbl('Registration Date',st.reg,M+104,y,55);y+=14;
     doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);
-    doc.text('Driving School: Car Driving School   Phone: 587-778-3633',M,y);y+=12;
+    doc.text('Driving School: Edmonton Car Driving School   Phone: 780-908-2195',M,y);y+=12;
 
     // In-vehicle sessions
     doc.setFillColor(230,237,246);doc.rect(M,y,W-M*2,8,'F');
@@ -1518,7 +2061,7 @@ function printFullRecord(id) {
     if(overall){doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(26,58,92);doc.text('Overall: '+overall,M+4,y+20);}
     y+=30;
     if(y>245){doc.addPage();y=20;}
-    sigLine(y,'Student signature','Car Driving School Representative');
+    sigLine(y,'Student signature','Edmonton Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(155,155,155);
     doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -1610,7 +2153,7 @@ function printFullRecord(id) {
     // PAGE 4: COMPLETION SUMMARY
     // ══════════════════════════════════════════════════════
     doc.addPage(); y=34;
-    hdr('Course Completion Record','Car Driving School  587-778-3633','DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58]);
+    hdr('Course Completion Record','Edmonton Car Driving School  780-908-2195','DPLS0068 Rev. 2026-05  D.R.I.V.E.R.',[10,92,58]);
     addPhoto(W-M-30,y-2,28,35);
 
     doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(110,110,110);
@@ -1638,7 +2181,7 @@ function printFullRecord(id) {
     }
 
     if(y>240){doc.addPage();y=20;}
-    sigLine(y,'Student / Guardian signature','Car Driving School Representative');
+    sigLine(y,'Student / Guardian signature','Edmonton Car Driving School Representative');
     doc.setFontSize(7);doc.setTextColor(155,155,155);
     doc.text('Protected A - Alberta Transportation and Economic Corridors - TEC.LicensingTraining@gov.ab.ca',M,y+12,{maxWidth:W-M*2});
 
@@ -1674,8 +2217,8 @@ function saveDplsToStudent(id) {
     lessons: getLessonChecks(),
     comments:getComments()
   };
-  // Also save completion data if on completion tab
-  st.cmpData = {
+  // Only update cmpData if completion tab fields have values
+  var newCmp = {
     ivGrade: gv('c-ivg'),
     clGrade: gv('c-clg'),
     overall: gv('c-ovr'),
@@ -1683,8 +2226,291 @@ function saveDplsToStudent(id) {
     clHrs:   document.getElementById('c-clh') ? document.getElementById('c-clh').value : '',
     notes:   gv('c-note')
   };
+  // Only overwrite if there is actual completion data
+  if (newCmp.ivGrade || newCmp.clGrade || newCmp.overall || newCmp.notes) {
+    st.cmpData = newCmp;
+  } else if (!st.cmpData) {
+    st.cmpData = newCmp; // First time setup
+  }
+  // Only save contract signatures if they actually have content drawn
+  // (don't overwrite saved signatures when called from DPLS tab)
+  var stuSigData = getSig('sig-student');
+  var schSigData = getSig('sig-school');
+  var sigDateData = document.getElementById('sig-date') ? document.getElementById('sig-date').value : '';
+  if (stuSigData || schSigData) {
+    st.conData = st.conData || {};
+    if (stuSigData) st.conData.stuSig = stuSigData;
+    if (schSigData) st.conData.schSig = schSigData;
+    if (sigDateData) st.conData.sigDate = sigDateData;
+  }
+  // If no signatures on screen but we have saved ones, keep them
+  // (don't clear them just because DPLS tab is open)
   for (var i = 0; i < students.length; i++) {
     if (students[i].id === id) { students[i] = st; break; }
+  }
+  autoSave();
+}
+
+
+// ── SKILLS & LESSON PLAN DATA ─────────────────────────────────────────
+var SKILLS = [
+  {cat:'Vehicle-Handling (Psychomotor)'},
+  {id:'sk-steer',  name:'Steering'},
+  {id:'sk-brake',  name:'Braking'},
+  {id:'sk-speed',  name:'Speed Control'},
+  {cat:'Visual Skills'},
+  {id:'sk-scan-r', name:'Scanning - Rear'},
+  {id:'sk-scan-p', name:'Scanning - Sides (Peripheral)'},
+  {id:'sk-scan-f', name:'Scanning - Front'},
+  {id:'sk-trk',    name:'Visual - Tracking'},
+  {id:'sk-int',    name:'Visual - Intersections'},
+  {id:'sk-turns',  name:'Visual - Turns'},
+  {id:'sk-park',   name:'Visual - Parking/Backing'},
+  {cat:'Knowledge (Cognitive) Skills'},
+  {id:'sk-judgt',  name:'Judgment - Time'},
+  {id:'sk-judgs',  name:'Judgment - Space'},
+  {id:'sk-judgrw', name:'Judgment - Right of Way'},
+  {id:'sk-dec',    name:'Decision-Making/Planning'},
+  {id:'sk-signs',  name:'Traffic - Signs'},
+  {id:'sk-lights', name:'Traffic - Lights'},
+  {id:'sk-marks',  name:'Traffic - Markings'},
+  {id:'sk-rules',  name:'Rules of the Road'},
+  {id:'sk-ccmt',   name:'Commentary'},
+  {cat:'Awareness (Perceptual) Skills'},
+  {id:'sk-hazm',   name:'Hazard Management'},
+  {id:'sk-haza',   name:'Hazard Awareness'},
+  {id:'sk-risk',   name:'Risk Assessment'},
+  {id:'sk-pcmt',   name:'Commentary'}
+];
+
+var LESSONS = [
+  {title:'Lesson 1 (Hours 1-2)', items:['Pre-trip / Under the Hood (Exterior)','Basic Habits (Interior)','Demonstration Drive / Demo','Start and Stop','Lane Changing / Blind Zone Check','Turns - Right','Turns - Left']},
+  {title:'Lesson 2 (Hours 3-4)', items:['Intersections (Controlled/Uncontrolled)','Multi-Lane Roadways','Turns - Controlled Intersections','Turns - Multi-Lane Intersections','Clutch / Shifting','Backing','Parallel Parking','Angle / Perpendicular Parking','Up / Down Hill Parking']},
+  {title:'Lesson 3 (Hours 5-6)', items:['One-Way Streets','Railway Crossings','Traffic Circles','Highway / Freeway Driving','Hazard Awareness / Commentary','Hazard Management / Commentary']},
+  {title:'Lesson 4 (Hours 7-8)', items:['Merging / Weave Zones','2 & 3 Point Turns','Adverse Conditions / After Dark']},
+  {title:'Lesson 5 (Hours 9-10)', items:['Downtown','Independent Driving']}
+];
+
+var lpChecked = {};
+var skillsInited = false;
+
+function renderSkillsTable() {
+  var tbody = document.getElementById('skills-tbody');
+  if (!tbody) return;
+  var html = '';
+  SKILLS.forEach(function(s) {
+    if (s.cat) {
+      html += '<tr><td class="skill-cat" colspan="6">' + s.cat + '</td></tr>';
+    } else {
+      html += '<tr><td class="skill-name">' + s.name + '</td>';
+      for (var h = 1; h <= 5; h++) {
+        html += '<td style="text-align:center"><input type="text" id="' + s.id + '-h' + h + '" maxlength="3" placeholder="-" inputmode="decimal" pattern="[4-9](\.5)?|D|N/?A" style="width:44px;height:30px;border:1px solid rgba(0,0,0,0.15);border-radius:5px;text-align:center;font-size:13px;font-weight:700;background:#fff;color:var(--navy);padding:0" onkeypress="return validateSkillKey(event)" oninput="formatSkillVal(this)"/></td>';
+      }
+      html += '</tr>';
+    }
+  });
+  tbody.innerHTML = html;
+  // Wire auto-save on skill inputs
+  if (tbody) tbody.addEventListener('input', debouncedSaveDpls);
+}
+
+function renderLessonPlan() {
+  var wrap = document.getElementById('lesson-plan-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  LESSONS.forEach(function(lesson, li) {
+    var group = document.createElement('div');
+    group.className = 'lp-group';
+    var title = document.createElement('div');
+    title.className = 'lp-group-title';
+    title.textContent = lesson.title;
+    group.appendChild(title);
+    lesson.items.forEach(function(item, ii) {
+      var key = 'lp-' + li + '-' + ii;
+      var row = document.createElement('div');
+      row.className = 'lp-item';
+      var cb = document.createElement('div');
+      cb.className = 'lp-cb' + (lpChecked[key] ? ' checked' : '');
+      cb.innerHTML = lpChecked[key] ? '&#10003;' : '';
+      cb.onclick = (function(k, el) {
+        return function() {
+          lpChecked[k] = !lpChecked[k];
+          el.className = 'lp-cb' + (lpChecked[k] ? ' checked' : '');
+          el.innerHTML = lpChecked[k] ? '&#10003;' : '';
+          debouncedSaveDpls();
+        };
+      })(key, cb);
+      var lbl = document.createElement('div');
+      lbl.className = 'lp-label';
+      lbl.textContent = item;
+      row.appendChild(cb); row.appendChild(lbl);
+      group.appendChild(row);
+    });
+    wrap.appendChild(group);
+  });
+}
+
+function initPage2() {
+  if (!skillsInited) {
+    renderSkillsTable();
+    renderLessonPlan();
+    skillsInited = true;
+  }
+}
+
+function getSkillData() {
+  var data = {};
+  SKILLS.forEach(function(s) {
+    if (!s.id) return;
+    data[s.id] = [];
+    for (var h = 1; h <= 5; h++) {
+      var el = document.getElementById(s.id + '-h' + h);
+      data[s.id].push(el ? el.value.trim() : '');
+    }
+  });
+  return data;
+}
+
+function getLessonChecks() {
+  return LESSONS.map(function(lesson, li) {
+    return {
+      title: lesson.title,
+      all: lesson.items,
+      checked: lesson.items.filter(function(item, ii) {
+        return !!lpChecked['lp-' + li + '-' + ii];
+      })
+    };
+  });
+}
+
+function getComments() {
+  var c = [];
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('cmt-' + i);
+    c.push(el ? el.value.trim() : '');
+  }
+  return c;
+}
+
+
+// ── DRAWING ENGINE ────────────────────────────────────────────────────
+function initDraw(canvas, lw) {
+  if (canvas._di) return;
+  canvas._di = true;
+  var ctx = canvas.getContext('2d');
+  lw = lw || 2;
+  var down = false, lx = 0, ly = 0;
+
+  // Draw dashed baseline for large signature pads
+  if (lw >= 2) {
+    var bly = Math.round(canvas.height * 0.72);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,6]);
+    ctx.beginPath();
+    ctx.moveTo(20, bly); ctx.lineTo(canvas.width - 20, bly);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function getPos(e) {
+    var r = canvas.getBoundingClientRect();
+    var sx = canvas.width / r.width;
+    var sy = canvas.height / r.height;
+    var src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * sx, y: (src.clientY - r.top) * sy };
+  }
+  function start(e) {
+    e.preventDefault(); down = true;
+    var p = getPos(e); lx = p.x; ly = p.y;
+    ctx.beginPath(); ctx.arc(lx, ly, lw/2, 0, Math.PI*2);
+    ctx.fillStyle = '#1a1a1a'; ctx.fill();
+  }
+  function draw(e) {
+    if (!down) return; e.preventDefault();
+    var p = getPos(e);
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = lw;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+    lx = p.x; ly = p.y;
+  }
+  function stop() { down = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stop);
+  canvas.addEventListener('mouseleave', stop);
+  canvas.addEventListener('touchstart', start, {passive: false});
+  canvas.addEventListener('touchmove', draw, {passive: false});
+  canvas.addEventListener('touchend', stop);
+}
+
+function clearCanvas(id) {
+  var c = document.getElementById(id);
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  // Redraw baseline for large signature pads
+  if (c.height >= 100) {
+    var bly = Math.round(c.height * 0.72);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,6]);
+    ctx.beginPath();
+    ctx.moveTo(20, bly); ctx.lineTo(c.width - 20, bly);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function hasContent(canvas) {
+  if (!canvas) return false;
+  try {
+    var d = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < d.length; i += 4) { if (d[i] > 10) return true; }
+  } catch(e) {}
+  return false;
+}
+
+function getSig(id) {
+  var c = document.getElementById(id);
+  if (!c || !hasContent(c)) return '';
+  try { return c.toDataURL('image/png'); } catch(e) { return ''; }
+}
+
+
+// ── SKILL INPUT VALIDATION ────────────────────────────────────────────
+function validateSkillKey(e) {
+  var ch = String.fromCharCode(e.which || e.keyCode);
+  var cur = e.target.value;
+  // Allow: digits 4-9, decimal point, D (denied), N (N/A), backspace, delete, tab
+  if (e.which === 8 || e.which === 9 || e.which === 46) return true;
+  // Allow D or N for Denied / N/A
+  if (ch === 'D' || ch === 'd' || ch === 'N' || ch === 'n' || ch === '/') return true;
+  // Allow digits
+  if (ch >= '0' && ch <= '9') return true;
+  // Allow one decimal point
+  if (ch === '.' && cur.indexOf('.') < 0) return true;
+  // Block everything else
+  e.preventDefault(); return false;
+}
+
+function formatSkillVal(el) {
+  var v = el.value.toUpperCase().trim();
+  // Auto-format: if just a number, validate range 4.0-9.0
+  var num = parseFloat(v);
+  if (!isNaN(num)) {
+    // Only allow 4.0 to 9.0 in steps of 0.5
+    if (num < 4) { el.style.borderColor = '#e55'; el.title = 'Min grade is 4.0'; }
+    else if (num > 9) { el.style.borderColor = '#e55'; el.title = 'Max grade is 9.0'; }
+    else { el.style.borderColor = 'rgba(26,58,92,0.4)'; el.title = ''; }
+  } else {
+    // Allow D (Denied) or N/A
+    if (v === '' || v === 'D' || v === 'N/A' || v === 'NA') {
+      el.style.borderColor = 'rgba(0,0,0,0.15)'; el.title = '';
+    }
   }
 }
 
@@ -1693,11 +2519,15 @@ function init() {
   document.getElementById('tab-home').onclick = function() { goTab('home'); };
   document.getElementById('tab-reg').onclick  = function() { goTab('reg'); };
   document.getElementById('tab-con').onclick  = function() { goTab('con'); };
-  document.getElementById('tab-dpl').onclick  = function() { goTab('dpl'); };
+  document.getElementById('tab-dpl').onclick = function() {
+    goTab('dpl');
+    setTimeout(function() { if (selDpl) initPage2(); }, 100);
+  };
   document.getElementById('tab-cmp').onclick  = function() { goTab('cmp'); };
 
   // Top bar
   document.getElementById('btn-save').onclick = doSave;
+  document.getElementById('btn-cloud-save').onclick = cloudSave;
   document.getElementById('inp-load').onchange = doLoad;
 
   // Register buttons
@@ -1735,6 +2565,9 @@ function init() {
       document.querySelectorAll('.co').forEach(function(x) { x.classList.remove('on'); });
       this.classList.add('on');
       selCls = this.getAttribute('data-cls');
+      // Show/hide Other note field
+      var wrap = document.getElementById('other-note-wrap');
+      if (wrap) wrap.style.display = selCls === 'Other' ? 'block' : 'none';
     };
   });
 
@@ -1752,8 +2585,15 @@ function init() {
   document.getElementById('btn-dpl-dl').onclick = makeDpl;
   document.getElementById('btn-cmp-dl').onclick = makeCmp;
 
-  // Start
-  renderHome();
+  // Start - load saved data then render
+  autoLoad(function(found, count) {
+    updateCount();
+    renderHome();
+    if (found && count > 0) {
+      var ind = document.getElementById('save-ind');
+      if (ind) { ind.textContent = '✓ '+count+' student'+(count===1?'':'s'); ind.style.color='rgba(255,255,255,0.7)'; }
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
